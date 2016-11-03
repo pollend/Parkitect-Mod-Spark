@@ -7,7 +7,7 @@ using UnityEngine;
 public class ModPayload : ScriptableSingleton<ModPayload>
 {
 	[SerializeField]
-	public List<ParkitectObj> parkitectObjecst;
+	public List<ParkitectObj> ParkitectObjs;
 
 
 	[SerializeField]
@@ -17,8 +17,8 @@ public class ModPayload : ScriptableSingleton<ModPayload>
 
 	public ModPayload ()
 	{
-		if (parkitectObjecst == null)
-			parkitectObjecst = new List<ParkitectObj> ();
+		if (ParkitectObjs == null)
+			ParkitectObjs = new List<ParkitectObj> ();
 	}
 }
 

@@ -17,11 +17,12 @@ public class BaseDecorator : Decorator
 	public float price;
 
 	#if UNITY_EDITOR
-	public override void Render (ParkitectObj parkitectObj)
+
+    public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
 		this.InGameName = EditorGUILayout.TextField("In Game name: ", this.InGameName);
 		this.price = EditorGUILayout.FloatField("Price: ", this.price);
-		base.Render (parkitectObj);
+        base.RenderInspectorGUI (parkitectObj);
 	}
 	#endif
 

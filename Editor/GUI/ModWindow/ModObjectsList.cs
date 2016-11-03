@@ -15,8 +15,8 @@ public class ModObjectsList
 
 	public void switchParkitectObject(ParkitectObj orignal, ParkitectObj replace)
 	{
-		if (ModPayload.Instance.parkitectObjecst.Contains (orignal)) {
-			ModPayload.Instance.parkitectObjecst.Remove (orignal);
+		if (ModPayload.Instance.ParkitectObjs.Contains (orignal)) {
+			ModPayload.Instance.ParkitectObjs.Remove (orignal);
 
 			UnityEngine.Object.DestroyImmediate (orignal, true);
 			AssetDatabase.SaveAssets ();
@@ -37,19 +37,20 @@ public class ModObjectsList
 		if (obj == this.selectedParkitectObject)
 			this.selectedParkitectObject = null;
 
-
+        ModPayload.Instance.ParkitectObjs.Remove (obj);
 		UnityEngine.Object.DestroyImmediate (obj, true);
+        obj.CleanUp ();
 		AssetDatabase.SaveAssets ();
 		if(!EditorSceneManager.GetActiveScene().isDirty)
 			EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
 		
 
-		return ModPayload.Instance.parkitectObjecst.Remove (obj);
+		return ModPayload.Instance.ParkitectObjs.Remove (obj);
 	}
 
 	public bool AddParkitectObject(ParkitectObj obj)
 	{
-		if (!ModPayload.Instance.parkitectObjecst.Contains (obj)) {
+		if (!ModPayload.Instance.ParkitectObjs.Contains (obj)) {
 			AssetDatabase.AddObjectToAsset (obj,ModPayload.Instance);
 			EditorUtility.SetDirty(obj);
 			EditorApplication.SaveAssets();
@@ -58,7 +59,7 @@ public class ModObjectsList
 			if(!EditorSceneManager.GetActiveScene().isDirty)
 				EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
 
-			ModPayload.Instance.parkitectObjecst.Add (obj);
+			ModPayload.Instance.ParkitectObjs.Add (obj);
 			return true;
 		}
 		return false;
@@ -68,16 +69,17 @@ public class ModObjectsList
 	{
 		this.selectedParkitectObject = null;
 
-		for(int x = 0;x  < ModPayload.Instance.parkitectObjecst.Count; x++)
-			UnityEngine.Object.DestroyImmediate (ModPayload.Instance.parkitectObjecst[x], true);
-
+        for (int x = 0; x < ModPayload.Instance.ParkitectObjs.Count; x++) {
+            ModPayload.Instance.ParkitectObjs [x].CleanUp ();
+            UnityEngine.Object.DestroyImmediate (ModPayload.Instance.ParkitectObjs [x], true);
+        }
 
 		AssetDatabase.SaveAssets ();
 		if(!EditorSceneManager.GetActiveScene().isDirty)
 			EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
 		
 
-		ModPayload.Instance.parkitectObjecst.Clear ();
+		ModPayload.Instance.ParkitectObjs.Clear ();
 	}
 
 
@@ -90,7 +92,7 @@ public class ModObjectsList
 		GUILayout.BeginHorizontal();
 		GUILayout.EndHorizontal();
 		scrollPos2 = EditorGUILayout.BeginScrollView(scrollPos2, "GroupBox", GUILayout.Height(140));
-		foreach (ParkitectObj PO in ModPayload.Instance.parkitectObjecst)
+		foreach (ParkitectObj PO in ModPayload.Instance.ParkitectObjs)
 		{
 			if (PO == this.selectedParkitectObject)
 			{
@@ -176,7 +178,7 @@ public class ModObjectsList
 		if (GO)
 		{
 
-			foreach (ParkitectObj po in  ModPayload.Instance.parkitectObjecst)
+			foreach (ParkitectObj po in  ModPayload.Instance.ParkitectObjs)
 			{
 				if (po.gameObject == GO)
 				{
@@ -193,7 +195,7 @@ public class ModObjectsList
 			selectedParkitectObject = deco;
 			//modManager.ParkitectObjects.Add(PO);
 			//modManager.asset = PO;
-			foreach (ParkitectObj PObj in ModPayload.Instance.parkitectObjecst)
+			foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs)
 			{
 				PObj.gameObject.transform.position = new Vector3(currentX, 0, 0);
 				currentX += PObj.XSize / 2;
@@ -216,7 +218,7 @@ public class ModObjectsList
 			{
 				foreach (GameObject GObj in Selection.objects)
 				{
-					foreach (ParkitectObj po in ModPayload.Instance.parkitectObjecst)
+					foreach (ParkitectObj po in ModPayload.Instance.ParkitectObjs)
 					{
 						if (po.gameObject == GObj)
 						{
@@ -241,7 +243,7 @@ public class ModObjectsList
 					this.selectedParkitectObject = deco;
 					//modManager.ParkitectObjects.Add(PO);
 					//modManager.asset = PO;
-					foreach (ParkitectObj PObj in ModPayload.Instance.parkitectObjecst)// modManager.ParkitectObjects)
+					foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs)// modManager.ParkitectObjects)
 					{
 						PObj.gameObject.transform.position = new Vector3(currentX, 0, 0);
 						currentX += PObj.XSize / 2;

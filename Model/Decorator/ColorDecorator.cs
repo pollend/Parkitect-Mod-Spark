@@ -5,18 +5,29 @@ using UnityEditor;
 [Serializable]
 public class ColorDecorator : Decorator
 {
+    [SerializeField]
+    public Color color1 =new Color(0.95f, 0, 0);
+    [SerializeField]
+    public Color color2 =new Color(0.95f, 0, 0);
+    [SerializeField]
+    public Color color3 =new Color(0.95f, 0, 0);
+    [SerializeField]
+    public Color color4 =new Color(0.95f, 0, 0);
+    [SerializeField]
+    public bool isRecolorable ;
 
 	public ColorDecorator ()
 	{
+
 	}
 
 	#if UNITY_EDITOR
-	public override void Render (ParkitectObj parkitectObj)
+    public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
 		//ModManager.asset.Shader = (ParkitectObject.Shaders)EditorGUILayout.EnumPopup("Shader", ModManager.asset.Shader);
-		//ModManager.asset.recolorable = EditorGUILayout.BeginToggleGroup("Recolorable", ModManager.asset.recolorable);
+        isRecolorable = EditorGUILayout.BeginToggleGroup("Recolorable", isRecolorable);
 
-		//if (ModManager.asset.recolorable)
+        if (isRecolorable)
 		{
 			try
 			{
@@ -74,14 +85,10 @@ public class ColorDecorator : Decorator
 		}
 		EditorGUILayout.EndToggleGroup();
 
-		base.Render (parkitectObj);
+        base.RenderInspectorGUI (parkitectObj);
 	}
 	#endif
 
-	public Color color1 = new Color(0.95f, 0, 0);
-	public Color color2 = new Color(0.95f, 0, 0);
-	public Color color3 = new Color(0.95f, 0, 0);
-	public Color color4 = new Color(0.95f, 0, 0);
 
 }
 

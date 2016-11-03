@@ -24,9 +24,18 @@ public class ParkitectObj : ScriptableObject
 			return GameObject.Find (gameObjectRef).transform.parent.gameObject;
 		}
 		set{ 
-			Transform gameRef =  value.gameObject.transform.Find ("pkref");
+            Transform gameRef =  null;
+
+            for(int i = 0; i < value.transform.childCount; i++)
+            {
+                if (value.transform.GetChild (i).name.StartsWith ("pkref-")) {
+                    gameRef = value.transform.GetChild (i);
+                    break;
+                }
+            }
+
 			if (gameRef == null) {
-				gameRef = new GameObject (System.Guid.NewGuid().ToString()).transform;
+				gameRef = new GameObject ("pkref-" + System.Guid.NewGuid().ToString()).transform;
 				gameRef.transform.parent = value.transform;
 
 			}
@@ -44,7 +53,7 @@ public class ParkitectObj : ScriptableObject
 	{
 		this.decorators = parkitectObj.decorators;
 		this.name = parkitectObj.name;
-		this.gameObjectRef = parkitectObj.gameObject.name;
+        this.gameObjectRef = parkitectObj.gameObjectRef;
 		this.XSize = parkitectObj.XSize;
 
 	}
@@ -62,6 +71,7 @@ public class ParkitectObj : ScriptableObject
 			this.decorators.Add (decorators [x]);
 		}
 	}
+
 
 	public Decorator GetDecorator(Type t)
 	{
@@ -95,6 +105,14 @@ public class ParkitectObj : ScriptableObject
 	public virtual void Load()
 	{
 	}
+
+    public void CleanUp()
+    {
+        for (int x = 0; x < decorators.Count; x++) {
+            UnityEngine.Object.DestroyImmediate (decorators[x], true);
+        }
+    }
+   
 
 }
 

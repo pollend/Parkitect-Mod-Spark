@@ -13,7 +13,7 @@ public class PathTypeDecorator : Decorator
 	}
 
 	#if UNITY_EDITOR
-	public override void Render (ParkitectObj parkitectObj)
+    public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
 		this.pathType = (PathTypeDecorator.PathType)EditorGUILayout.EnumPopup("Type", this.pathType);
 
@@ -46,7 +46,7 @@ public class PathTypeDecorator : Decorator
 			MonoBehaviour.DestroyImmediate(GO);
 			parkitectObj.gameObject.transform.eulerAngles = new Vector3(90,0,0);
 		}
-		base.Render (parkitectObj);
+        base.RenderInspectorGUI (parkitectObj);
 	}
 	#endif
 }

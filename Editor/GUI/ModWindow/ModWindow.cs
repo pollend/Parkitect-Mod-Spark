@@ -189,7 +189,7 @@ public class ModWindow : EditorWindow
 
 		}*/
 		parkitectObjTypeSelection.Render (modObjectsView);
-		parkitectObjSingle.Render (modObjectsView.selectedParkitectObject);
+		parkitectObjSingle.RenderInspectorGUI (modObjectsView.selectedParkitectObject);
 
 		EditorUtility.SetDirty(ModManager);
 		GUILayout.Space(50);
@@ -556,6 +556,10 @@ public class ModWindow : EditorWindow
 	}
 	void OnSceneGUI(SceneView sceneView)
 	{
+        if(parkitectObjSingle != null)
+            parkitectObjSingle.RenderSceneGUI (modObjectsView.selectedParkitectObject);
+
+
 		BBW.OnSceneGUI(ModManager.asset, ModManager);
 		if (ModManager.asset == null || !ModManager.asset.gameObject)
 		{

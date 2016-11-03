@@ -10,11 +10,11 @@ public class CategoryDecorator : Decorator
 	{
 	}
 
-	public override void Render (ParkitectObj parkitectObj)
+    public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
 		this.category = EditorGUILayout.TextField("Category: ", this.category);
 
-		base.Render (parkitectObj);
+        base.RenderInspectorGUI (parkitectObj);
 	}
 }
 

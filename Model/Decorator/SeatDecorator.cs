@@ -32,7 +32,7 @@ public class SeatDecorator : Decorator
 	}
 
 	#if UNITY_EDITOR
-	public override void Render (ParkitectObj parkitectObj)
+    public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
 		GUILayout.BeginHorizontal();
 		if (GUILayout.Button("Create 1 Seats"))
@@ -64,7 +64,7 @@ public class SeatDecorator : Decorator
 		}
 		GUILayout.EndHorizontal();
 
-		base.Render (parkitectObj);
+        base.RenderInspectorGUI (parkitectObj);
 	}
 	#endif
 

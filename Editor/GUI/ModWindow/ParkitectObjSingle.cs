@@ -8,7 +8,7 @@ public class ParkitectObjSingle
 	{
 	}
 
-	public void Render(ParkitectObj selectedObject)
+	public void RenderInspectorGUI(ParkitectObj selectedObject)
 	{
 
 		if (selectedObject != null && selectedObject.gameObject != null) {
@@ -19,10 +19,20 @@ public class ParkitectObjSingle
 
 			Type[] types =  selectedObject.SupportedDecorators ();
 			for (int x = 0; x < types.Length; x++) {
-				selectedObject.GetDecorator (types [x]).Render (selectedObject);
+                selectedObject.GetDecorator (types [x]).RenderInspectorGUI (selectedObject);
 			}
 		}
 	}
+
+    public void RenderSceneGUI(ParkitectObj selectedObject)
+    {
+        if (selectedObject != null && selectedObject.gameObject != null) {
+            Type[] types =  selectedObject.SupportedDecorators ();
+            for (int x = 0; x < types.Length; x++) {
+                selectedObject.GetDecorator (types [x]).RenderSceneGUI (selectedObject);
+            }
+        }
+    }
 }
 
 

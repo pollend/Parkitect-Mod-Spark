@@ -8,8 +8,7 @@ public class Decorator : ScriptableObject
 	{
 	}
 
-	public virtual void Render(ParkitectObj parkitectObj)
-	{
-	}
+	public virtual void RenderSceneGUI(ParkitectObj parkitectObj){}
+    public virtual void RenderInspectorGUI(ParkitectObj parkitectObj){}
 }
 
