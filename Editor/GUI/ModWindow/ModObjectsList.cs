@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 
 public class ModObjectsList
@@ -12,16 +13,51 @@ public class ModObjectsList
 	{
 	}
 
+	public void switchParkitectObject(ParkitectObj orignal, ParkitectObj replace)
+	{
+		if (ModPayload.Instance.parkitectObjecst.Contains (orignal)) {
+			ModPayload.Instance.parkitectObjecst.Remove (orignal);
+
+			UnityEngine.Object.DestroyImmediate (orignal, true);
+			AssetDatabase.SaveAssets ();
+			if(!EditorSceneManager.GetActiveScene().isDirty)
+				EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
+			
+		
+		}
+		this.AddParkitectObject (replace);
+
+		if (orignal == this.selectedParkitectObject) {
+			this.selectedParkitectObject = replace;
+		}
+	}
+
 	public bool RemoveParkitectObject(ParkitectObj obj)
 	{
 		if (obj == this.selectedParkitectObject)
 			this.selectedParkitectObject = null;
+
+
+		UnityEngine.Object.DestroyImmediate (obj, true);
+		AssetDatabase.SaveAssets ();
+		if(!EditorSceneManager.GetActiveScene().isDirty)
+			EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
+		
+
 		return ModPayload.Instance.parkitectObjecst.Remove (obj);
 	}
 
 	public bool AddParkitectObject(ParkitectObj obj)
 	{
 		if (!ModPayload.Instance.parkitectObjecst.Contains (obj)) {
+			AssetDatabase.AddObjectToAsset (obj,ModPayload.Instance);
+			EditorUtility.SetDirty(obj);
+			EditorApplication.SaveAssets();
+			AssetDatabase.SaveAssets ();
+
+			if(!EditorSceneManager.GetActiveScene().isDirty)
+				EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
+
 			ModPayload.Instance.parkitectObjecst.Add (obj);
 			return true;
 		}
@@ -31,6 +67,16 @@ public class ModObjectsList
 	public void ClearParkitectObjects()
 	{
 		this.selectedParkitectObject = null;
+
+		for(int x = 0;x  < ModPayload.Instance.parkitectObjecst.Count; x++)
+			UnityEngine.Object.DestroyImmediate (ModPayload.Instance.parkitectObjecst[x], true);
+
+
+		AssetDatabase.SaveAssets ();
+		if(!EditorSceneManager.GetActiveScene().isDirty)
+			EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
+		
+
 		ModPayload.Instance.parkitectObjecst.Clear ();
 	}
 
@@ -139,12 +185,12 @@ public class ModObjectsList
 					return;
 				}
 			}
-			ParkitectObj PO = new ParkitectObj(new Decorator[]{});
-			PO.gameObject = GO;
-			PO.name = GO.name;
+			DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> (); //new ParkitectObj(new Decorator[]{});
+			deco.gameObject = GO;
+			deco.name = GO.name;
 			float currentX = 0;
-			this.AddParkitectObject (PO);
-			selectedParkitectObject = PO;
+			this.AddParkitectObject (deco);
+			selectedParkitectObject = deco;
 			//modManager.ParkitectObjects.Add(PO);
 			//modManager.asset = PO;
 			foreach (ParkitectObj PObj in ModPayload.Instance.parkitectObjecst)
@@ -187,12 +233,12 @@ public class ModObjectsList
 
 
 					}
-					ParkitectObj PO = new ParkitectObj(new Decorator[]{});
-					PO.gameObject = GObj;
-					PO.name = GObj.name;
+					DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> ();
+					deco.gameObject = GObj;
+					deco.name = GObj.name;
 					float currentX = 0;
-					AddParkitectObject (PO);
-					this.selectedParkitectObject = PO;
+					AddParkitectObject (deco);
+					this.selectedParkitectObject = deco;
 					//modManager.ParkitectObjects.Add(PO);
 					//modManager.asset = PO;
 					foreach (ParkitectObj PObj in ModPayload.Instance.parkitectObjecst)// modManager.ParkitectObjects)

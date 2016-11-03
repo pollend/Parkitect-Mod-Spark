@@ -31,6 +31,8 @@ public class ModWindow : EditorWindow
 
 	ModConfigurationView modConfigurationView = new ModConfigurationView();
 	ModObjectsList  modObjectsView = new ModObjectsList();
+	ParkitectObjTypeSelection parkitectObjTypeSelection = new ParkitectObjTypeSelection();
+	ParkitectObjSingle parkitectObjSingle  = new ParkitectObjSingle();
 
 	public void repaintWindow()
 	{
@@ -147,7 +149,7 @@ public class ModWindow : EditorWindow
 		{
 			GUI.color = Color.grey;
 		}
-		if (ModManager.asset != null)
+		/*if (ModManager.asset != null)
 		{
 			GUILayout.BeginHorizontal("flow background");
 			if (ModManager.asset != null)
@@ -185,7 +187,10 @@ public class ModWindow : EditorWindow
 			}
 
 
-		}
+		}*/
+		parkitectObjTypeSelection.Render (modObjectsView);
+		parkitectObjSingle.Render (modObjectsView.selectedParkitectObject);
+
 		EditorUtility.SetDirty(ModManager);
 		GUILayout.Space(50);
 		EditorGUILayout.EndScrollView();

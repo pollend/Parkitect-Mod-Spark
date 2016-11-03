@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace AssemblyCSharp
+[Serializable]
+public class FootprintDecorator : Decorator
 {
-	public class FootprintDecorator : Decorator
+	public FootprintDecorator ()
 	{
-		public FootprintDecorator ()
-		{
-		}
 	}
 }
+
 

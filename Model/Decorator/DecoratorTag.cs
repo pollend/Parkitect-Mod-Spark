@@ -1,12 +1,11 @@
 ﻿using System;
 
-
+[Serializable]
 public class DecoratorTag : System.Attribute
 {
 	public readonly string name;
 	public string Name{
 		get{ return name; }
-		set{ name = value; }
 	}
 	public DecoratorTag ()
 	{

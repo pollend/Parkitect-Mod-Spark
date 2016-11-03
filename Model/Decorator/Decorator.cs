@@ -1,8 +1,14 @@
 ﻿using System;
+using UnityEngine;
 
-public class Decorator
+[Serializable]
+public class Decorator : ScriptableObject
 {
 	public Decorator ()
+	{
+	}
+
+	public virtual void Render(ParkitectObj parkitectObj)
 	{
 	}
 }

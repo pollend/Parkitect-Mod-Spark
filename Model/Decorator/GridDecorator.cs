@@ -1,18 +1,31 @@
 ﻿using System;
+using UnityEditor;
 
-namespace AssemblyCSharp
+
+[Serializable]
+public class GridDecorator : Decorator
 {
-	public class GridDecorator : Decorator
-	{
-		public bool snapCenter = true;
-		public bool snap;
-		public bool grid;
-		public float heightDelta;
-		public float gridSubdivision = 1;
+	public bool snapCenter = true;
+	public bool snap;
+	public bool grid;
+	public float heightDelta;
+	public float gridSubdivision = 1;
 
-		public GridDecorator ()
-		{
-		}
+	public GridDecorator ()
+	{
 	}
+
+	#if UNITY_EDITOR
+	public override void Render (ParkitectObj parkitectObj)
+	{
+		this.grid = EditorGUILayout.Toggle("GridSnap: ", this.grid);
+		this.heightDelta = EditorGUILayout.FloatField("HeightDelta: ", this.heightDelta);
+		this.snapCenter = EditorGUILayout.Toggle("SnapCenter: ", this.snapCenter);
+		this.gridSubdivision = EditorGUILayout.FloatField("Grid Subdivision", this.gridSubdivision);
+
+		base.Render (parkitectObj);
+	}
+	#endif
 }
+
 

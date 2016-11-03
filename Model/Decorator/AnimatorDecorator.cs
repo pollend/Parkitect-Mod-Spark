@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace AssemblyCSharp
+
+[Serializable]
+public class AnimatorDecorator
 {
-	public class AnimatorDecorator
+	public AnimatorDecorator ()
 	{
-		public AnimatorDecorator ()
-		{
-		}
 	}
 }
+
 
