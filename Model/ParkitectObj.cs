@@ -18,6 +18,8 @@ public class ParkitectObj : ScriptableObject
 	public string name;
 	public float XSize;
 
+	public string getKey{get{return gameObjectRef;}}
+
 	public GameObject gameObject{ 
 		get 
 		{ 

@@ -258,118 +258,9 @@ public class ModWindow : EditorWindow
 
 	}
 
-	void FlatRideGUI()
-	{
-		BasicGUI();
-		ColorGUI();
-		if (enableEditing)
-		{
-			GUI.color = Color.grey;
-		}
 
-		GUILayout.Space(10);
-		GUILayout.Label("Rating", EditorStyles.boldLabel);
-		ModManager.asset.Excitement = EditorGUILayout.Slider("Excitement (" + getRatingCategory(ModManager.asset.Excitement) + ")", ModManager.asset.Excitement, 0, 100);
-		ModManager.asset.Intensity = EditorGUILayout.Slider("Intensity (" + getRatingCategory(ModManager.asset.Intensity) + ")", ModManager.asset.Intensity, 0, 100);
-		ModManager.asset.Nausea = EditorGUILayout.Slider("Nausea (" + getRatingCategory(ModManager.asset.Nausea) + ")", ModManager.asset.Nausea, 0, 100);
-		GUILayout.Space(10);
-		ModManager.asset.closedAngleRetraints = EditorGUILayout.Vector3Field("Closed Restraints Angle", ModManager.asset.closedAngleRetraints);
 
-		GUILayout.Space(10);
-		GUI.color = Color.white;
-		ModManager.asset.XSize = (float)EditorGUILayout.IntField("X", (int)Math.Floor(ModManager.asset.XSize));
-		ModManager.asset.ZSize = (float)EditorGUILayout.IntField("Z", (int)Math.Floor(ModManager.asset.ZSize));
 
-		GUILayout.Label("Waypoints", "PreToolbar");
-		WaypointGUI();
-
-	}
-	private string getRatingCategory(float ratingValue)
-	{
-		ratingValue /= 100f;
-		if (ratingValue > 0.9f)
-		{
-			return "Very High";
-		}
-		if (ratingValue > 0.6f)
-		{
-			return "High";
-		}
-		if (ratingValue > 0.3f)
-		{
-			return "Medium";
-		}
-		return "Low";
-	}
-	void BasicGUI()
-	{
-		ModManager.asset.inGameName = EditorGUILayout.TextField("In Game name: ", ModManager.asset.inGameName);
-		ModManager.asset.price = EditorGUILayout.FloatField("Price: ", ModManager.asset.price);
-	}
-
-	void ColorGUI()
-	{
-
-		ModManager.asset.Shader = (ParkitectObject.Shaders)EditorGUILayout.EnumPopup("Shader", ModManager.asset.Shader);
-		ModManager.asset.recolorable = EditorGUILayout.BeginToggleGroup("Recolorable", ModManager.asset.recolorable);
-
-		if (ModManager.asset.recolorable)
-		{
-			try
-			{
-				int colorsUsed = 0;
-				ModManager.asset.color1 = EditorGUILayout.ColorField("Color 1", ModManager.asset.color1);
-				if (ModManager.asset.color1 != new Color(0.95f, 0, 0))
-				{
-					colorsUsed = 1;
-					ModManager.asset.color2 = EditorGUILayout.ColorField("Color 2", ModManager.asset.color2);
-				}
-				if (ModManager.asset.color2 != new Color(0.32f, 1, 0))
-				{
-					colorsUsed = 2;
-					ModManager.asset.color3 = EditorGUILayout.ColorField("Color 3", ModManager.asset.color3);
-				}
-				if (ModManager.asset.color3 != new Color(0.110f, 0.059f, 1f))
-				{
-					colorsUsed = 3;
-					ModManager.asset.color4 = EditorGUILayout.ColorField("Color 4", ModManager.asset.color4);
-				}
-				if(ModManager.asset.color4 != new Color(1, 0, 1))
-					colorsUsed = 4;
-				if(colorsUsed == 0)
-				{
-					GUILayout.Label("No custom colors used");
-				}
-				else if (colorsUsed == 1)
-				{
-					GUILayout.Label("You are only using color 1");
-				}
-				else if (colorsUsed == 2)
-				{
-					GUILayout.Label("You are only using color 1 & 2");
-				}
-				else if (colorsUsed == 3)
-				{
-					GUILayout.Label("You are only using color 1 - 3");
-				}
-				else if (colorsUsed == 4)
-				{
-					GUILayout.Label("You are only using color 1 - 4");
-				}
-				if (GUILayout.Button("Reset"))
-				{
-					ModManager.asset.color1 = new Color(0.95f, 0, 0);
-					ModManager.asset.color2 = new Color(0.32f, 1, 0);
-					ModManager.asset.color3 = new Color(0.110f, 0.059f, 1f);
-					ModManager.asset.color4 = new Color(1, 0, 1);
-				}
-			}
-			catch (Exception)
-			{
-			}
-		}
-		EditorGUILayout.EndToggleGroup();
-	}
 	void DecoGUI()
 	{
 		switch (ModManager.asset.type)
@@ -381,14 +272,14 @@ public class ModWindow : EditorWindow
 		case ParkitectObject.ObjType.deco:
 			break;
 		case ParkitectObject.ObjType.trashbin:
-			BasicGUI();
-			ColorGUI();
+			//BasicGUI();
+			//ColorGUI();
 			return;
 		case ParkitectObject.ObjType.seating:
 			EditorGUILayout.HelpBox("Make child objects called seat to make a seat (Working seats will display a yellow sphere)", MessageType.Info);
-			BasicGUI();
+			//BasicGUI();
 
-			ColorGUI();
+			//ColorGUI();
 
 			//Generate Seats
 			GUILayout.BeginHorizontal();
@@ -417,14 +308,14 @@ public class ModWindow : EditorWindow
 			GUILayout.EndHorizontal();
 			return;
 		case ParkitectObject.ObjType.wall:
-			BasicGUI();
+			//BasicGUI();
 			ModManager.asset.category = EditorGUILayout.TextField("Category: ", ModManager.asset.category);
 			ModManager.asset.heightDelta = EditorGUILayout.FloatField("HeightDelta: ", ModManager.asset.heightDelta);
-			ColorGUI();
+			//ColorGUI();
 			return;
 		case ParkitectObject.ObjType.lamp:
-			BasicGUI();
-			ColorGUI();
+			//BasicGUI();
+			//ColorGUI();
 			return;
 		case ParkitectObject.ObjType.fence:
 			EditorGUILayout.HelpBox("Fences are in development", MessageType.Warning);
@@ -432,8 +323,8 @@ public class ModWindow : EditorWindow
 		case ParkitectObject.ObjType.FlatRide:
 			break;
 		case ParkitectObject.ObjType.Shop:
-			BasicGUI();
-			ColorGUI();
+			//BasicGUI();
+			//ColorGUI();
 			ModManager.asset.shop.DrawGUI();
 			return;
 		case ParkitectObject.ObjType.CoasterCar:
@@ -441,55 +332,25 @@ public class ModWindow : EditorWindow
 			ModManager.asset.CoasterName = EditorGUILayout.TextField("Coaster Name", ModManager.asset.CoasterName);
 			ModManager.asset.frontCar = (GameObject)EditorGUILayout.ObjectField("Front Car", ModManager.asset.frontCar, typeof(GameObject), true);
 			ModManager.asset.closedAngleRetraints = EditorGUILayout.Vector3Field("Closed Restraints Angle", ModManager.asset.closedAngleRetraints);
-			ColorGUI();
+			//ColorGUI();
 			return;
 		case ParkitectObject.ObjType.PathStyle:
-			BasicGUI();
+			//BasicGUI();
 			ModManager.asset.pathType = (ParkitectObject.PathType)EditorGUILayout.EnumPopup("Type", ModManager.asset.pathType);
-			PathGUI();
+			//PathGUI();
 			return;
 		default:
 			return;
 		}
-		BasicGUI();
+		//BasicGUI();
 		ModManager.asset.grid = EditorGUILayout.Toggle("GridSnap: ", ModManager.asset.grid);
 		ModManager.asset.heightDelta = EditorGUILayout.FloatField("HeightDelta: ", ModManager.asset.heightDelta);
 		ModManager.asset.snapCenter = EditorGUILayout.Toggle("SnapCenter: ", ModManager.asset.snapCenter);
 		ModManager.asset.gridSubdivision = EditorGUILayout.FloatField("Grid Subdivision", ModManager.asset.gridSubdivision);
 		ModManager.asset.category = EditorGUILayout.TextField("Category: ", ModManager.asset.category);
-		ColorGUI();
+		//ColorGUI();
 	}
-	void PathGUI()
-	{
-		ModManager.asset.PathTexture = (Texture2D)EditorGUILayout.ObjectField("Texture",ModManager.asset.PathTexture, typeof(Texture2D), true);
-		if(GUILayout.Button("Create") && ModManager.asset.PathTexture)
-		{
-			ModManager.asset.PathTexture.alphaIsTransparency = true;
-			ModManager.asset.PathTexture.wrapMode = TextureWrapMode.Repeat;
-			ModManager.asset.PathTexture.filterMode = FilterMode.Point;
 
-			AssetDatabase.DeleteAsset("Assets/Materials/Paths/" + ModManager.asset.inGameName + ".mat");
-			ModManager.asset.gameObject.AddComponent<MeshRenderer>();
-			MeshRenderer MR = ModManager.asset.gameObject.GetComponent<MeshRenderer>();
-
-			//Check Folder for the mat
-			if (!AssetDatabase.IsValidFolder("Assets/Materials"))
-				AssetDatabase.CreateFolder("Assets", "Materials");
-			if (!AssetDatabase.IsValidFolder("Assets/Materials/Paths"))
-				AssetDatabase.CreateFolder("Assets/Materials", "Paths");
-			Material material = new Material(Shader.Find("Transparent/Diffuse"));
-			material.mainTexture = ModManager.asset.PathTexture;
-			AssetDatabase.CreateAsset(material, "Assets/Materials/Paths/" + ModManager.asset.inGameName + ".mat");
-			MR.material = material;
-
-			ModManager.asset.gameObject.AddComponent<MeshFilter>();
-			MeshFilter MF = ModManager.asset.gameObject.GetComponent<MeshFilter>();
-			GameObject GO = GameObject.CreatePrimitive(PrimitiveType.Quad);
-			MF.mesh = GO.GetComponent<MeshFilter>().sharedMesh;
-			DestroyImmediate(GO);
-			ModManager.asset.gameObject.transform.eulerAngles = new Vector3(90,0,0);
-		}
-	}
 
 	void OnFocus()
 	{

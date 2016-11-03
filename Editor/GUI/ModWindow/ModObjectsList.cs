@@ -7,7 +7,13 @@ using UnityEditor.SceneManagement;
 public class ModObjectsList
 {
 	private Vector2 scrollPos2 = new Vector2();
-	public ParkitectObj selectedParkitectObject { get; private set; }
+	public ParkitectObj selectedParkitectObject 
+	{ 
+		get { return ModPayload.Instance.selectedParkitectObject;}
+		private set { 
+			ModPayload.Instance.selectedParkitectObject = value;
+		}
+	}
 
 	public ModObjectsList ()
 	{

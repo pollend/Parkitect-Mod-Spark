@@ -11,7 +11,8 @@ public class BoundingBoxDecorator : Decorator
             boundingBoxes = new List<BoundingBox> ();
     }
 
-    public bool enableEditing = false;
+	[NonSerialized]
+	private bool enableEditing = false;
     private bool snap = false;
     private Vector2 scrollPos2;
     public BoundingBox selected;

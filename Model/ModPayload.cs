@@ -9,6 +9,8 @@ public class ModPayload : ScriptableSingleton<ModPayload>
 	[SerializeField]
 	public List<ParkitectObj> ParkitectObjs;
 
+	[SerializeField]
+	public ParkitectObj selectedParkitectObject { get; set; }
 
 	[SerializeField]
 	public string name;
