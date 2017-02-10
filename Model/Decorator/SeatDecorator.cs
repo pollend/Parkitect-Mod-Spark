@@ -2,35 +2,19 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
+using System.Linq;
 
 public class SeatDecorator : Decorator
 {
-	[SerializeField]
-	private GameObject[] seats;
+	[NonSerialized]
+	private List<GameObject> seats = new List<GameObject> ();
 
-	public void AddSeat(GameObject gameobject)
+	public override void Load (ParkitectObj parkitectObj)
 	{
-		if (seats == null)
-			seats = new GameObject[]{gameobject};
-		else 
-		{
-			List<GameObject> temp = new List<GameObject> (seats);
-			temp.Add (gameobject);
-			seats = temp.ToArray ();
-		}
-		
+		findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, "Seat", seats);
+		base.Load (parkitectObj);
 	}
 
-	public GameObject[] GetSeats()
-	{
-		List<GameObject> temp = new List<GameObject> ();
-		for (int x = 0; x < seats.Length; x++) {
-			if (seats [x] != null)
-				temp.Add (seats [x]);
-		}
-
-		return temp.ToArray();
-	}
 
 	#if UNITY_EDITOR
     public override void RenderInspectorGUI (ParkitectObj parkitectObj)
@@ -40,12 +24,14 @@ public class SeatDecorator : Decorator
 		{
 			GameObject seat1 = new GameObject("Seat");
 
-			this.AddSeat (seat1);
 
-			seat1.transform.parent = parkitectObj.GameObjectRef.transform;
+			seat1.transform.parent = parkitectObj.getGameObjectRef(true).transform;
 
 			seat1.transform.localPosition = new Vector3(0, 0.1f, 0);
 			seat1.transform.localRotation = Quaternion.Euler(Vector3.zero);
+
+			seats.Clear ();
+			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, "Seat", seats);
 		}
 		if (GUILayout.Button("Create 2 Seat"))
 		{
@@ -53,26 +39,39 @@ public class SeatDecorator : Decorator
 			GameObject seat2 = new GameObject("Seat");
 
 
-			seat1.transform.parent = parkitectObj.GameObjectRef.transform;
-			seat2.transform.parent = parkitectObj.GameObjectRef.transform;
-
-			this.AddSeat (seat1);
-			this.AddSeat (seat2);
+			seat1.transform.parent = parkitectObj.getGameObjectRef(true).transform;
+			seat2.transform.parent = parkitectObj.getGameObjectRef(true).transform;
 
 			seat1.transform.localPosition = new Vector3(0.1f, 0.1f, 0);
 			seat1.transform.localRotation = Quaternion.Euler(Vector3.zero);
 			seat2.transform.localPosition = new Vector3(-0.1f, 0.1f, 0);
 			seat2.transform.localRotation = Quaternion.Euler(Vector3.zero);
+			seats.Clear ();
+			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, "Seat", seats);
+
 		}
 		GUILayout.EndHorizontal();
 
         base.RenderInspectorGUI (parkitectObj);
 	}
 
+	private void findAllChildrenWithName(Transform transform,String name,List<GameObject> collection)
+	{
+		for(int i = 0; i < transform.childCount;i++ ) {
+			var temp  = transform.GetChild(i);
+			if (temp.name == name) {
+				collection.Add (temp.gameObject);
+			}
+			findAllChildrenWithName (temp, name, collection);
+		}
+	}
+
 	public override void RenderSceneGUI (ParkitectObj parkitectObj)
 	{
+		seats.RemoveAll (x => x == null);
+
 		if(seats != null)
-		for (int x = 0; x < seats.Length; x++) {
+			for (int x = 0; x < seats.Count; x++) {
 				if (seats [x] != null) {
 					var transform = seats [x].transform;
 

@@ -11,7 +11,7 @@ public class ParkitectObj : ScriptableObject
 {
 	//Basic
 	[SerializeField]
-	private List<Decorator> decorators;
+	private List<Decorator> decorators  = new List<Decorator> ();
 	[SerializeField]
 	private GameObject prefab;
 	[SerializeField]
@@ -28,20 +28,49 @@ public class ParkitectObj : ScriptableObject
 
 	public GameObject Prefab{ get {return prefab;} }
 
-	public GameObject GameObjectRef{
-		get{
-			GameObject[] rootSceneNodes =  EditorSceneManager.GetActiveScene ().GetRootGameObjects ();
-			for (int x = 0; x < rootSceneNodes.Length; x++) {
-				var gameObject = rootSceneNodes [x].transform.Find (this.key);
-				if (gameObject != null)
-					return gameObject.parent.gameObject;
-			}
-			return null;
+	public void UpdatePrefab()
+	{
+		var refrence = getGameObjectRef (false);
+		if (refrence != null) {
+			this.SetGameObject (refrence);
 		}
 	}
 
-	public virtual GameObject SetGameObject(GameObject g)
+	public GameObject getGameObjectRef(bool createInstance)
 	{
+		GameObject[] rootSceneNodes =  EditorSceneManager.GetActiveScene ().GetRootGameObjects ();
+		for (int x = 0; x < rootSceneNodes.Length; x++) {
+			var gameObject = rootSceneNodes [x].transform.Find (this.key);
+			if (gameObject != null)
+				return gameObject.parent.gameObject;
+		}
+
+		if (createInstance) {
+			GameObject refrence = Instantiate (Prefab);
+			refrence.name = Prefab.name;
+			PrefabUtility.ConnectGameObjectToPrefab (refrence, Prefab);
+
+			return getGameObjectRef(false);
+		}
+		return null;
+	}
+
+	public void LoadDecorators()
+	{
+		for (int i = 0; i < decorators.Count; i++) {
+			decorators [i].Load (this);
+		}
+	}
+
+
+
+	public virtual GameObject SetGameObject(GameObject g,bool allowDestroyingAsset)
+	{
+		var path = "Assets/Resources/" + g.name + ".prefab";
+		if (allowDestroyingAsset) {
+			FileUtil.DeleteFileOrDirectory (path);
+		}
+
 		Transform gameRef =  null;
 
 		for(int i = 0; i < g.transform.childCount; i++)
@@ -58,22 +87,15 @@ public class ParkitectObj : ScriptableObject
 
 		}
 		this.key = gameRef.name;
-
-		var path = "Assets/Resources/" + g.name + ".prefab";
 		GameObject prefab =  PrefabUtility.CreatePrefab (path, g);
 		PrefabUtility.ConnectGameObjectToPrefab (g, prefab);
 		name = prefab.name;
 		this.prefab = prefab;
+		EditorUtility.SetDirty (this);
 		return prefab;
 	}
 
 
-
-	public ParkitectObj()
-	{
-		if (decorators == null)
-			decorators = new List<Decorator> ();
-	}
 
 	public void Load(ParkitectObj parkitectObj)
 	{
@@ -81,6 +103,11 @@ public class ParkitectObj : ScriptableObject
 		this.name = parkitectObj.name;
 		this.prefab = parkitectObj.prefab;
 		this.XSize = parkitectObj.XSize;
+		this.key = parkitectObj.getKey;
+
+		for (int x = 0; x < decorators.Count; x++) {
+			decorators [x].Load (this);
+		}
 
 	}
 
@@ -89,13 +116,7 @@ public class ParkitectObj : ScriptableObject
 		return new Type[]{ };
 	}
 
-	public ParkitectObj (Decorator[] decorators)
-	{
-		this.decorators = new List<Decorator> ();
-		for (int x = 0; x < decorators.Length; x++) {
-			this.decorators.Add (decorators [x]);
-		}
-	}
+
 
 
 	public Decorator GetDecorator(Type t)
@@ -125,15 +146,10 @@ public class ParkitectObj : ScriptableObject
 	}
 
 
-		
-	public virtual void Load()
-	{
-	}
-
     public void CleanUp()
     {
         for (int x = 0; x < decorators.Count; x++) {
-			decorators [x].CleanUp ();
+			decorators [x].CleanUp (this);
             UnityEngine.Object.DestroyImmediate (decorators[x], true);
         }
     }

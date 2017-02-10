@@ -26,8 +26,8 @@ public class PathTypeDecorator : Decorator
 			this.pathTexture.filterMode = FilterMode.Point;
 
 			AssetDatabase.DeleteAsset("Assets/Materials/Paths/" + parkitectObj.name + ".mat");
-			parkitectObj.GameObjectRef.gameObject.AddComponent<MeshRenderer>();
-			MeshRenderer MR = parkitectObj.GameObjectRef.GetComponent<MeshRenderer>();
+			parkitectObj.getGameObjectRef(true).AddComponent<MeshRenderer>();
+			MeshRenderer MR = parkitectObj.getGameObjectRef(true).GetComponent<MeshRenderer>();
 
 			//Check Folder for the mat
 			if (!AssetDatabase.IsValidFolder("Assets/Materials"))
@@ -39,12 +39,12 @@ public class PathTypeDecorator : Decorator
 			AssetDatabase.CreateAsset(material, "Assets/Materials/Paths/" + parkitectObj.name + ".mat");
 			MR.material = material;
 
-			parkitectObj.GameObjectRef.gameObject.AddComponent<MeshFilter>();
-			MeshFilter MF = parkitectObj.GameObjectRef.GetComponent<MeshFilter>();
+			parkitectObj.getGameObjectRef(true).AddComponent<MeshFilter>();
+			MeshFilter MF = parkitectObj.getGameObjectRef(true).GetComponent<MeshFilter>();
 			GameObject GO = GameObject.CreatePrimitive(PrimitiveType.Quad);
 			MF.mesh = GO.GetComponent<MeshFilter>().sharedMesh;
 			MonoBehaviour.DestroyImmediate(GO);
-			parkitectObj.GameObjectRef.gameObject.transform.eulerAngles = new Vector3(90,0,0);
+			parkitectObj.getGameObjectRef(true).transform.eulerAngles = new Vector3(90,0,0);
 		}
         base.RenderInspectorGUI (parkitectObj);
 	}

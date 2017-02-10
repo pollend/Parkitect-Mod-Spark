@@ -4,9 +4,6 @@
 [Serializable]
 public class DecoParkitectObject : ParkitectObj
 {
-	public DecoParkitectObject ()
-	{
-	}
 
 	public override Type[] SupportedDecorators ()
 	{

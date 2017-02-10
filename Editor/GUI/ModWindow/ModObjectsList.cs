@@ -154,10 +154,15 @@ public class ModObjectsList
 
 					}
 
-					EditorGUIUtility.PingObject(PO.Prefab);
+					GameObject instance = PO.getGameObjectRef (true);
+
+					EditorGUIUtility.PingObject(instance);
 					GameObject[] newSelection = new GameObject[1];
-					newSelection[0] = PO.Prefab;
+					newSelection[0] = instance;
 					Selection.objects = newSelection;
+					PO.LoadDecorators ();
+
+
 					if (SceneView.lastActiveSceneView)
 					{
 						SceneView.lastActiveSceneView.FrameSelected();

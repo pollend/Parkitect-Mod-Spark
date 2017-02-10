@@ -13,10 +13,13 @@ public class ParkitectObjSingle
 
 		if (selectedObject != null && selectedObject.Prefab != null) {
 
+
+
 			GUILayout.BeginHorizontal("flow background");
 			GUILayout.Label(selectedObject.Prefab.name, "LODLevelNotifyText");
 			GUILayout.EndHorizontal();
 
+			GUILayout.Label(selectedObject.key);
 
 			Type[] types =  selectedObject.SupportedDecorators ();
 			for (int x = 0; x < types.Length; x++) {

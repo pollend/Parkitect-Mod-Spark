@@ -47,6 +47,8 @@ public class ParkitectObjTypeSelection
 			GUILayout.BeginHorizontal ();
 				int selection = EditorGUILayout.Popup ("Type", current, options); 
 				if (selection != current) {
+					
+					modObjectList.selectedParkitectObject.CleanUp ();
 
 					ParkitectObj pkObj= (ParkitectObj)ScriptableObject.CreateInstance (parkitectObjs [selection]);
 					pkObj.Load (modObjectList.selectedParkitectObject);

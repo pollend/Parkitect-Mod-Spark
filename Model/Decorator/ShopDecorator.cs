@@ -101,9 +101,9 @@ public class ShopDecorator : Decorator
 		products.Add (product);
 	}
 
-	public override void CleanUp ()
+	public override void CleanUp (ParkitectObj parkitectObj)
 	{
-		base.CleanUp ();
+		base.CleanUp (parkitectObj);
 	}
 }
 
