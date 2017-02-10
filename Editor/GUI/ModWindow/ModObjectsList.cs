@@ -42,6 +42,7 @@ public class ModObjectsList
 		if (obj == this.selectedParkitectObject)
 			this.selectedParkitectObject = null;
 
+		obj.CleanUp ();
         ModPayload.Instance.ParkitectObjs.Remove (obj);
 		UnityEngine.Object.DestroyImmediate (obj, true);
         obj.CleanUp ();
@@ -125,6 +126,7 @@ public class ModObjectsList
 					{
 						if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this item? Name: " + PO.Prefab.name, "Ok", "Cancel"))
 						{
+							PO.CleanUp ();
 							this.RemoveParkitectObject (PO);
 							//modManager.ParkitectObjects.Remove(PO);
 							//modManager.asset = null;
@@ -195,20 +197,27 @@ public class ModObjectsList
 					EditorGUIUtility.PingObject(po.Prefab);
 					return;
 				}
+				if (po.Prefab.name == GO.name) {
+					if (!EditorUtility.DisplayDialog ("This object has the same name", "This object will replace the existing object if you want to proceede?", "Ok", "Cancel")) {
+						EditorGUIUtility.PingObject(po.Prefab);
+						return;
+					}
+
+				}
 			}
 			DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> (); //new ParkitectObj(new Decorator[]{});
+			deco.SetGameObject (GO);
 
-			deco.SetGameObject(GO);
 			float currentX = 0;
 			this.AddParkitectObject (deco);
 			selectedParkitectObject = deco;
 			//modManager.ParkitectObjects.Add(PO);
 			//modManager.asset = PO;
-			foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs)
-			{
-				PObj.Prefab.transform.position = new Vector3(currentX, 0, 0);
+			foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs) {
+				PObj.Prefab.transform.position = new Vector3 (currentX, 0, 0);
 				currentX += PObj.XSize / 2;
 			}
+
 
 
 		}
@@ -229,23 +238,24 @@ public class ModObjectsList
 				{
 					foreach (ParkitectObj po in ModPayload.Instance.ParkitectObjs)
 					{
-						if (po.Prefab == GObj)
-						{
-							UnityEngine.Debug.LogWarning("Object already in list");
-							EditorGUIUtility.PingObject(po.Prefab);
+						if (po.Prefab == GObj) {
+							UnityEngine.Debug.LogWarning ("Object already in list");
+							EditorGUIUtility.PingObject (po.Prefab);
 							return;
-						}
-						else if (!GameObject.Find(po.Prefab.name))
-						{
-							UnityEngine.Debug.LogWarning("Object not in scene");
-							EditorGUIUtility.PingObject(po.Prefab);
+						} else if (!GameObject.Find (po.Prefab.name)) {
+							UnityEngine.Debug.LogWarning ("Object not in scene");
+							EditorGUIUtility.PingObject (po.Prefab);
+							return;
+						} else if (GObj.name == po.Prefab.name) {
+							UnityEngine.Debug.LogWarning ("Object found with the same name");
+							EditorGUIUtility.PingObject (po.Prefab);
 							return;
 						}
 
 
 					}
 					DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> ();
-					 deco.SetGameObject(GObj);
+					deco.SetGameObject(GObj);
 					float currentX = 0;
 					AddParkitectObject (deco);
 					this.selectedParkitectObject = deco;

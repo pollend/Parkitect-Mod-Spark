@@ -3,13 +3,14 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Xml;
 
 public class Credits : EditorWindow
 {
 
     Texture2D logo = new Texture2D(200, 100);
     private Vector2 scrollPosition;
-    //XmlElement xelRoot;
+    XmlElement xelRoot;
     [MenuItem("Parkitect/Credits", false, 105)]
     static void Init()
     {
@@ -28,9 +29,9 @@ public class Credits : EditorWindow
         Stream stream;
         using (stream = client.OpenRead("http://modspark.parkitectnexus.com/Credits.xml"))
         {
-            //XmlDocument doc = new XmlDocument();
-           // doc.Load(stream);
-          //  xelRoot = doc.DocumentElement;
+            XmlDocument doc = new XmlDocument();
+            doc.Load(stream);
+           xelRoot = doc.DocumentElement;
 
         }
 
@@ -49,9 +50,9 @@ public class Credits : EditorWindow
         GUILayout.Space(7);
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
-       // XmlNodeList ModNodes = xelRoot.ChildNodes;
+        XmlNodeList ModNodes = xelRoot.ChildNodes;
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-       /* foreach (XmlNode Node in ModNodes)
+        foreach (XmlNode Node in ModNodes)
         {
             GUILayout.BeginVertical();
             GUILayout.Label(Node.Name, "PreToolbar");
@@ -77,7 +78,7 @@ public class Credits : EditorWindow
             GUILayout.Space(10);
             GUILayout.EndVertical();
 
-        }*/
+        }
         GUILayout.EndScrollView();
         GUILayout.FlexibleSpace();
         var centeredStyle = GUI.skin.GetStyle("Label");

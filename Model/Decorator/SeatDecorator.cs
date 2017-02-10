@@ -6,12 +6,15 @@ using System.Linq;
 
 public class SeatDecorator : Decorator
 {
+	private const string SEAT = "Seat";
+
 	[NonSerialized]
 	private List<GameObject> seats = new List<GameObject> ();
 
 	public override void Load (ParkitectObj parkitectObj)
 	{
-		findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, "Seat", seats);
+		seats.Clear ();
+		findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, SEAT, seats);
 		base.Load (parkitectObj);
 	}
 
@@ -22,7 +25,7 @@ public class SeatDecorator : Decorator
 		GUILayout.BeginHorizontal();
 		if (GUILayout.Button("Create 1 Seats"))
 		{
-			GameObject seat1 = new GameObject("Seat");
+			GameObject seat1 = new GameObject(SEAT);
 
 
 			seat1.transform.parent = parkitectObj.getGameObjectRef(true).transform;
@@ -31,12 +34,12 @@ public class SeatDecorator : Decorator
 			seat1.transform.localRotation = Quaternion.Euler(Vector3.zero);
 
 			seats.Clear ();
-			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, "Seat", seats);
+			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, SEAT, seats);
 		}
 		if (GUILayout.Button("Create 2 Seat"))
 		{
-			GameObject seat1 = new GameObject("Seat");
-			GameObject seat2 = new GameObject("Seat");
+			GameObject seat1 = new GameObject(SEAT);
+			GameObject seat2 = new GameObject(SEAT);
 
 
 			seat1.transform.parent = parkitectObj.getGameObjectRef(true).transform;
@@ -47,7 +50,7 @@ public class SeatDecorator : Decorator
 			seat2.transform.localPosition = new Vector3(-0.1f, 0.1f, 0);
 			seat2.transform.localRotation = Quaternion.Euler(Vector3.zero);
 			seats.Clear ();
-			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, "Seat", seats);
+			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform,SEAT, seats);
 
 		}
 		GUILayout.EndHorizontal();

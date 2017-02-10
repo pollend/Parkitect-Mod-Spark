@@ -34,6 +34,7 @@ public class ParkitectObj : ScriptableObject
 		if (refrence != null) {
 			this.SetGameObject (refrence);
 		}
+		LoadDecorators ();
 	}
 
 	public GameObject getGameObjectRef(bool createInstance)
@@ -52,6 +53,7 @@ public class ParkitectObj : ScriptableObject
 
 			return getGameObjectRef(false);
 		}
+
 		return null;
 	}
 
@@ -64,13 +66,8 @@ public class ParkitectObj : ScriptableObject
 
 
 
-	public virtual GameObject SetGameObject(GameObject g,bool allowDestroyingAsset)
+	public virtual GameObject SetGameObject(GameObject g)
 	{
-		var path = "Assets/Resources/" + g.name + ".prefab";
-		if (allowDestroyingAsset) {
-			FileUtil.DeleteFileOrDirectory (path);
-		}
-
 		Transform gameRef =  null;
 
 		for(int i = 0; i < g.transform.childCount; i++)
@@ -86,6 +83,9 @@ public class ParkitectObj : ScriptableObject
 			gameRef.transform.parent = g.transform;
 
 		}
+
+		var path = "Assets/Resources/" + g.name + ".prefab";
+
 		this.key = gameRef.name;
 		GameObject prefab =  PrefabUtility.CreatePrefab (path, g);
 		PrefabUtility.ConnectGameObjectToPrefab (g, prefab);

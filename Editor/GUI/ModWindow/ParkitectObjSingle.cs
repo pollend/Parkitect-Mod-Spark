@@ -20,6 +20,14 @@ public class ParkitectObjSingle
 			GUILayout.EndHorizontal();
 
 			GUILayout.Label(selectedObject.key);
+			if (GUILayout.Button ("Update Prefab")) {
+				selectedObject.UpdatePrefab ();
+			}
+
+			if (GUILayout.Button ("Create Instance In Scene")) {
+				selectedObject.getGameObjectRef (true);
+				selectedObject.UpdatePrefab ();
+			}
 
 			Type[] types =  selectedObject.SupportedDecorators ();
 			for (int x = 0; x < types.Length; x++) {
