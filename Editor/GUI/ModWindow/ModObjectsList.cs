@@ -28,7 +28,6 @@ public class ModObjectsList
 			AssetDatabase.SaveAssets ();
 			if(!EditorSceneManager.GetActiveScene().isDirty)
 				EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
-			
 		
 		}
 		this.AddParkitectObject (replace);
@@ -59,7 +58,6 @@ public class ModObjectsList
 		if (!ModPayload.Instance.ParkitectObjs.Contains (obj)) {
 			AssetDatabase.AddObjectToAsset (obj,ModPayload.Instance);
 			EditorUtility.SetDirty(obj);
-			EditorApplication.SaveAssets();
 			AssetDatabase.SaveAssets ();
 
 			if(!EditorSceneManager.GetActiveScene().isDirty)
@@ -104,7 +102,7 @@ public class ModObjectsList
 			{
 				GUI.color = Color.red;
 			}
-			if (!PO.gameObject)
+			if (!PO.Prefab)
 			{
 				if (GUILayout.Button("##No game object found##", "minibutton"))
 				{
@@ -125,7 +123,7 @@ public class ModObjectsList
 				{
 					if (e.button == 1)
 					{
-						if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this item? Name: " + PO.gameObject.name, "Ok", "Cancel"))
+						if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this item? Name: " + PO.Prefab.name, "Ok", "Cancel"))
 						{
 							this.RemoveParkitectObject (PO);
 							//modManager.ParkitectObjects.Remove(PO);
@@ -156,9 +154,9 @@ public class ModObjectsList
 
 					}
 
-					EditorGUIUtility.PingObject(PO.gameObject);
+					EditorGUIUtility.PingObject(PO.Prefab);
 					GameObject[] newSelection = new GameObject[1];
-					newSelection[0] = PO.gameObject;
+					newSelection[0] = PO.Prefab;
 					Selection.objects = newSelection;
 					if (SceneView.lastActiveSceneView)
 					{
@@ -186,16 +184,16 @@ public class ModObjectsList
 
 			foreach (ParkitectObj po in  ModPayload.Instance.ParkitectObjs)
 			{
-				if (po.gameObject == GO)
+				if (po.Prefab == GO)
 				{
 					EditorUtility.DisplayDialog("This object is already in the list", "The object that you want to add to the list is already in the list", "Ok");
-					EditorGUIUtility.PingObject(po.gameObject);
+					EditorGUIUtility.PingObject(po.Prefab);
 					return;
 				}
 			}
 			DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> (); //new ParkitectObj(new Decorator[]{});
-			deco.gameObject = GO;
-			deco.name = GO.name;
+
+			deco.SetGameObject(GO);
 			float currentX = 0;
 			this.AddParkitectObject (deco);
 			selectedParkitectObject = deco;
@@ -203,7 +201,7 @@ public class ModObjectsList
 			//modManager.asset = PO;
 			foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs)
 			{
-				PObj.gameObject.transform.position = new Vector3(currentX, 0, 0);
+				PObj.Prefab.transform.position = new Vector3(currentX, 0, 0);
 				currentX += PObj.XSize / 2;
 			}
 
@@ -226,24 +224,23 @@ public class ModObjectsList
 				{
 					foreach (ParkitectObj po in ModPayload.Instance.ParkitectObjs)
 					{
-						if (po.gameObject == GObj)
+						if (po.Prefab == GObj)
 						{
 							UnityEngine.Debug.LogWarning("Object already in list");
-							EditorGUIUtility.PingObject(po.gameObject);
+							EditorGUIUtility.PingObject(po.Prefab);
 							return;
 						}
-						else if (!GameObject.Find(po.gameObject.name))
+						else if (!GameObject.Find(po.Prefab.name))
 						{
 							UnityEngine.Debug.LogWarning("Object not in scene");
-							EditorGUIUtility.PingObject(po.gameObject);
+							EditorGUIUtility.PingObject(po.Prefab);
 							return;
 						}
 
 
 					}
 					DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> ();
-					deco.gameObject = GObj;
-					deco.name = GObj.name;
+					 deco.SetGameObject(GObj);
 					float currentX = 0;
 					AddParkitectObject (deco);
 					this.selectedParkitectObject = deco;
@@ -251,7 +248,7 @@ public class ModObjectsList
 					//modManager.asset = PO;
 					foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs)// modManager.ParkitectObjects)
 					{
-						PObj.gameObject.transform.position = new Vector3(currentX, 0, 0);
+						PObj.Prefab.transform.position = new Vector3(currentX, 0, 0);
 						currentX += PObj.XSize / 2;
 					}
 				}
@@ -267,7 +264,7 @@ public class ModObjectsList
 				this.ClearParkitectObjects ();
 			}
 		}
-		if (selectedParkitectObject != null && selectedParkitectObject.gameObject)
+		if (selectedParkitectObject != null && selectedParkitectObject.Prefab)
 		{
 			if (GUILayout.Button("Delete this object"))
 			{

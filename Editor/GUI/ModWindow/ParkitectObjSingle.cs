@@ -11,11 +11,12 @@ public class ParkitectObjSingle
 	public void RenderInspectorGUI(ParkitectObj selectedObject)
 	{
 
-		if (selectedObject != null && selectedObject.gameObject != null) {
+		if (selectedObject != null && selectedObject.Prefab != null) {
 
 			GUILayout.BeginHorizontal("flow background");
-			GUILayout.Label(selectedObject.gameObject.name, "LODLevelNotifyText");
+			GUILayout.Label(selectedObject.Prefab.name, "LODLevelNotifyText");
 			GUILayout.EndHorizontal();
+
 
 			Type[] types =  selectedObject.SupportedDecorators ();
 			for (int x = 0; x < types.Length; x++) {
@@ -26,7 +27,7 @@ public class ParkitectObjSingle
 
     public void RenderSceneGUI(ParkitectObj selectedObject)
     {
-        if (selectedObject != null && selectedObject.gameObject != null) {
+        if (selectedObject != null && selectedObject.Prefab != null) {
             Type[] types =  selectedObject.SupportedDecorators ();
             for (int x = 0; x < types.Length; x++) {
                 selectedObject.GetDecorator (types [x]).RenderSceneGUI (selectedObject);

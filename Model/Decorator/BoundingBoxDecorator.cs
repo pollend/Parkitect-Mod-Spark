@@ -148,10 +148,10 @@ public class BoundingBoxDecorator : Decorator
 
             if (enableEditing && box == selected)
             {
-                box.bounds.min = handleModifyValue(box.bounds.min, parkitectObj.gameObject.transform.InverseTransformPoint(Handles.PositionHandle(parkitectObj.gameObject.transform.TransformPoint(box.bounds.min), Quaternion.LookRotation(Vector3.left, Vector3.down))));
-                box.bounds.max = handleModifyValue(box.bounds.max, parkitectObj.gameObject.transform.InverseTransformPoint(Handles.PositionHandle(parkitectObj.gameObject.transform.TransformPoint(box.bounds.max), Quaternion.LookRotation(Vector3.forward))));
-                Handles.Label(parkitectObj.gameObject.transform.position + box.bounds.min, box.bounds.min.ToString("F2"));
-                Handles.Label(parkitectObj.gameObject.transform.position +  box.bounds.max, box.bounds.max.ToString("F2"));
+                box.bounds.min = handleModifyValue(box.bounds.min, parkitectObj.Prefab.transform.InverseTransformPoint(Handles.PositionHandle(parkitectObj.Prefab.transform.TransformPoint(box.bounds.min), Quaternion.LookRotation(Vector3.left, Vector3.down))));
+                box.bounds.max = handleModifyValue(box.bounds.max, parkitectObj.Prefab.transform.InverseTransformPoint(Handles.PositionHandle(parkitectObj.Prefab.transform.TransformPoint(box.bounds.max), Quaternion.LookRotation(Vector3.forward))));
+                Handles.Label(parkitectObj.Prefab.transform.position + box.bounds.min, box.bounds.min.ToString("F2"));
+                Handles.Label(parkitectObj.Prefab.transform.position +  box.bounds.max, box.bounds.max.ToString("F2"));
             }
         }
     }
@@ -178,7 +178,7 @@ public class BoundingBoxDecorator : Decorator
 
     private void drawPlane(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, Color fill, Color outer, ParkitectObj PO)
     {
-        Handles.DrawSolidRectangleWithOutline(new Vector3[] { PO.gameObject.transform.TransformPoint(p1), PO.gameObject.transform.TransformPoint(p2), PO.gameObject.transform.TransformPoint(p3), PO.gameObject.transform.TransformPoint(p4) }, fill, outer);
+        Handles.DrawSolidRectangleWithOutline(new Vector3[] { PO.Prefab.transform.TransformPoint(p1), PO.Prefab.transform.TransformPoint(p2), PO.Prefab.transform.TransformPoint(p3), PO.Prefab.transform.TransformPoint(p4) }, fill, outer);
     }
 }
 

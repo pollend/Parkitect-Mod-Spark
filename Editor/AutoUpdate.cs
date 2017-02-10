@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public static class UpdateInfo
+public static class UpdateInfo 
 {
     static public int CurVerion = 2;
     static public int CurNewVersion;

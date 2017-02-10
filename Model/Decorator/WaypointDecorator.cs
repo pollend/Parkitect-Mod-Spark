@@ -9,7 +9,7 @@ public class WaypointDecorator : Decorator
 	private bool enableEditing = false;
 	[NonSerialized]
 	private float helperPlaneY = 0;
-	[Serializable]
+	[SerializeField]
 	public Waypoint selectedWaypoint;
 
 	public List<Waypoint> waypoints = new List<Waypoint>();
@@ -21,7 +21,7 @@ public class WaypointDecorator : Decorator
 
 	public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
-		FlatrideDecorator flatRideDecorator = parkitectObj.GetDecorator (typeof(FlatrideDecorator));
+		//FlatrideDecorator flatRideDecorator = parkitectObj.GetDecorator (typeof(FlatrideDecorator));
 
 		string caption = "Enable Editing Waypoints";
 		if (enableEditing)
@@ -46,14 +46,14 @@ public class WaypointDecorator : Decorator
 		{
 			if (enableEditing)
 			{
-				currentTool = Tools.current;
+			//	currentTool = Tools.current;
 				Tools.current = Tool.None;
 
 
 			}
 			else
 			{
-				Tools.current = currentTool;
+				//Tools.current = currentTool;
 			}
 		}
 		if (enableEditing)
@@ -63,19 +63,19 @@ public class WaypointDecorator : Decorator
 
 			if (GUILayout.Button("Generate outer grid"))
 			{
-				generateOuterGrid();
+				//generateOuterGrid();
 			}
 			if (GUILayout.Button("(A)dd Waypoint"))
 			{
-				addWaypoint();
+				//addWaypoint();
 			}
 			if (GUILayout.Button("Rotate 90°"))
 			{
-				rotateWaypoints();
+				//rotateWaypoints();
 			}
 			if (GUILayout.Button("Clear all"))
 			{
-				ModManager.asset.waypoints.Clear();
+				//ModManager.asset.waypoints.Clear();
 			}
 		}
 
@@ -84,7 +84,7 @@ public class WaypointDecorator : Decorator
 
 	public override void RenderSceneGUI (ParkitectObj parkitectObj)
 	{
-		FlatrideDecorator flatRideDecorator = parkitectObj.GetDecorator (typeof(FlatrideDecorator));
+		/*FlatrideDecorator flatRideDecorator = parkitectObj.GetDecorator (typeof(FlatrideDecorator));
 
 
 		if (enableEditing) {
@@ -92,7 +92,7 @@ public class WaypointDecorator : Decorator
 			Vector3 topRight = new Vector3(flatRideDecorator.XSize / 2, helperPlaneY, flatRideDecorator.ZSize / 2) + parkitectObj.gameObject.transform.position;
 			Vector3 bottomLeft = new Vector3(-flatRideDecorator.XSize / 2, helperPlaneY, -flatRideDecorator.ZSize / 2) + parkitectObj.gameObject.transform.position;
 			Vector3 bottomRight = new Vector3(flatRideDecorator.XSize / 2, helperPlaneY, -flatRideDecorator.ZSize / 2) + parkitectObj.gameObject.transform.position;
-		}
+		}*/
 
 		base.RenderSceneGUI (parkitectObj);
 	}
@@ -119,7 +119,7 @@ public class WaypointDecorator : Decorator
 				//if (waypoints.waypoints.Count > 0) {
 				//newWaypoint.connectedTo.Add(waypoints.waypoints.Count - 1);
 				//}
-				ModManager.asset.waypoints.Add(newWaypoint);
+				//ModManager.asset.waypoints.Add(newWaypoint);
 			}
 		}
 

@@ -10,5 +10,6 @@ public class Decorator : ScriptableObject
 
 	public virtual void RenderSceneGUI(ParkitectObj parkitectObj){}
     public virtual void RenderInspectorGUI(ParkitectObj parkitectObj){}
+	public virtual void CleanUp(){}
 }
 

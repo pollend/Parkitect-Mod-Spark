@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 using System;
 using System.Linq;
 using MiniJSON;
@@ -44,7 +43,7 @@ public static class Exporter {
 
 
             //Car Type
-            if (PO.frontCar != null && PO.type == ParkitectObject.ObjType.CoasterCar && !AllNoneGO.Contains(PO.frontCar))
+       /*     if (PO.frontCar != null && PO.type == ParkitectObject.ObjType.CoasterCar && !AllNoneGO.Contains(PO.frontCar))
                 error = "Coaster Car Type '" + PO.inGameName + "' does have a front car that isn't in the mod as none object. Add it to the mod and make sure it is set to none. Otherwise the Front Car won't be in the bundle with all the objects.";
             else if (PO.gameObject != null && PO.type == ParkitectObject.ObjType.Shop && PO.shop != null)
                 foreach (Product P in PO.shop.products)
@@ -54,7 +53,8 @@ public static class Exporter {
                         error = "The Product '" + P.Name + "' from shop '" + PO.inGameName + "' does have a GameObject that isn't in the mod with the type None. Add it to the mod and make sure the Type is set to None. Otherwise the model of the product won't be in the bundle with all the objects.";
             else if (PO.type == ParkitectObject.ObjType.PathStyle && (!PO.gameObject.GetComponent< MeshRenderer >() || !PO.gameObject.GetComponent<MeshRenderer>().material))
                 error = "The Path Style '" + PO.inGameName + "' has not been setup correctly, make sure that you are creating the path by clicking the Create button after you asigned a texture. ";
-        }
+*/
+		}
 
         //Error logging
         if (error != "")
@@ -167,7 +167,7 @@ public static class Exporter {
     // =========[ SaveToXML ]=========================================================
     public static void SaveToXML(string path, ParkitectModManager ModManager)
     {
-
+		/*
         try
         {
 
@@ -283,11 +283,11 @@ public static class Exporter {
                   Application.dataPath,
                   ModManager.mod.name + ".xml",
                   "xml"), ModManager);
-
+*/
     }
     private static object BoudingBoxToXML(ParkitectObject obj)
     {
-        if (obj.BoundingBoxes.Count > 0)
+        /*if (obj.BoundingBoxes.Count > 0)
         {
             return
                new XElement("BoudingBoxes",
@@ -300,11 +300,12 @@ public static class Exporter {
         else
         {
             return null;
-        }
+        }*/
+		return null;
     }
     private static object ShopToXML(ParkitectObject obj)
     {
-        if (obj.type == ParkitectObject.ObjType.Shop)
+       /* if (obj.type == ParkitectObject.ObjType.Shop)
         {
             List<object> productsXML = new List<object>();
             foreach (ongoing P in obj.shop.products.OfType<ongoing>())
@@ -402,32 +403,35 @@ public static class Exporter {
         else
         {
             return null;
-        }
+        }*/
+		return null;
     }
     private static object AnimationToXML(ParkitectObject obj)
     {
-        return
+		return null;
+        /*return
             new XElement("Animation", 
             Motors(obj),
             PhasesToXML(obj)
             
-            );
+            );*/
     }
     private static object PhasesToXML(ParkitectObject obj)
     {
-        List<object> Phases = new List<object>();
+        /*List<object> Phases = new List<object>();
         foreach (Phase R in obj.Animation.phases.OfType<Phase>().ToList())
         {
             Phases.Add( new XElement("phase",EventsToXml(R)));
                 
                     
         }
-        return new XElement("phases", Phases.ToArray());
+        return new XElement("phases", Phases.ToArray());*/
+		return null;
     }
     private static object EventsToXml(Phase phase)
     {
         List<object> Events = new List<object>();
-
+		/*
         foreach (Wait R in phase.Events.OfType<Wait>().ToList())
         {
             Events.Add(new XElement("Wait", 
@@ -503,10 +507,13 @@ public static class Exporter {
             );
         }
         return new XElement("events", Events.ToArray());
-    }
+    */
+	
+		return null;
+	}
     private static object Motors(ParkitectObject obj)
     {
-        List<object> motors = new List<object>();
+       /* List<object> motors = new List<object>();
         List<Rotator> PendulumRotators = new List<Rotator>();
         foreach (PendulumRotator R in obj.Animation.motors.OfType<PendulumRotator>().ToList())
         {
@@ -574,7 +581,10 @@ public static class Exporter {
                 );
         }
         return new XElement("motors", motors.ToArray());
-    }
+    */
+	
+		return null;
+	}
     public static string GetGameObjectPath(GameObject obj)
     {
         string path = "/" + obj.name;

@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using System;
 using System.Linq;
 using System.IO;
-using System.Xml;
 
 
 
@@ -325,7 +323,7 @@ public class ModWindow : EditorWindow
 		case ParkitectObject.ObjType.Shop:
 			//BasicGUI();
 			//ColorGUI();
-			ModManager.asset.shop.DrawGUI();
+			//ModManager.asset.shop.DrawGUI();
 			return;
 		case ParkitectObject.ObjType.CoasterCar:
 			ModManager.asset.inGameName = EditorGUILayout.TextField("In Game name: ", ModManager.asset.inGameName);

@@ -103,10 +103,6 @@ public class ParkitectObject
     //Boundingbox
     public List<BoundingBox> BoundingBoxes = new List<BoundingBox>();
 
-    //Shop
-    [SerializeField]
-    public Shop shop = new Shop();
-
     //Path
     public enum PathType { Normal, Queue, Employee }
     public PathType pathType;
