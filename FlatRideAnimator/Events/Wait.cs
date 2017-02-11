@@ -15,7 +15,7 @@ public class Wait : RideAnimationEvent
             return "Wait";
         }
     }
-    public override void DrawGUI()
+	public override void RenderInspectorGUI(AnimatorDecorator animator)
     {
        
         seconds = EditorGUILayout.FloatField("Seconds", seconds);
@@ -23,7 +23,7 @@ public class Wait : RideAnimationEvent
         {
             GUILayout.Label("Time" + (timeLimit - Time.realtimeSinceStartup));
         }
-        base.DrawGUI();
+		base.RenderInspectorGUI(animator);
     }
 
     public override void Enter()

@@ -9,7 +9,6 @@ using System.Linq;
 public class FromToRot : RideAnimationEvent
 {
     public RotateBetween rotator;
-    public ParkitectObject obj;
 
     float lastTime;
     public override string EventName
@@ -19,13 +18,13 @@ public class FromToRot : RideAnimationEvent
             return "From-To Rot";
         }
     }
-    public override void DrawGUI()
+	public override void RenderInspectorGUI(AnimatorDecorator animator)
     {
         if (rotator)
         {
             ColorIdentifier = rotator.ColorIdentifier;
         }
-        foreach (RotateBetween R in obj.Animation.motors.OfType<RotateBetween>().ToList())
+		foreach (RotateBetween R in animator.Motors.OfType<RotateBetween>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red;
@@ -35,7 +34,7 @@ public class FromToRot : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-        base.DrawGUI();
+		base.RenderInspectorGUI(animator);
     }
 
     public override void Enter()

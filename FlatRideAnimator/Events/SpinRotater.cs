@@ -14,7 +14,6 @@ public class SpinRotater : RideAnimationEvent
     [SerializeField]
     public float spins = 1;
     float lastTime;
-    public ParkitectObject obj;
 
 
     public override string EventName
@@ -24,7 +23,7 @@ public class SpinRotater : RideAnimationEvent
             return "SpinRotator";
         }
     }
-    public override void DrawGUI()
+	public override void RenderInspectorGUI(AnimatorDecorator animator)
     {
 
         if (rotator)
@@ -37,7 +36,7 @@ public class SpinRotater : RideAnimationEvent
             EditorGUILayout.LabelField("Amount " + rotator.getRotationsCount());
         }
         
-        foreach (Rotator R in obj.Animation.motors.OfType<Rotator>().ToList())
+		foreach (Rotator R in animator.Motors.OfType<Rotator>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -47,7 +46,7 @@ public class SpinRotater : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-        base.DrawGUI();
+		base.RenderInspectorGUI(animator);
     }
 
     public override void Enter()

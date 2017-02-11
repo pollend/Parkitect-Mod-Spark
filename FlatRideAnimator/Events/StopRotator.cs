@@ -10,7 +10,6 @@ public class StopRotator : RideAnimationEvent
 {
     public Rotator rotator;
     float lastTime;
-    public ParkitectObject obj;
     public override string EventName
     {
         get
@@ -18,13 +17,13 @@ public class StopRotator : RideAnimationEvent
             return "StopRotator";
         }
     }
-    public override void DrawGUI()
+	public override void RenderInspectorGUI(AnimatorDecorator animator)
     {
         if (rotator)
         {
             ColorIdentifier = rotator.ColorIdentifier;
         }
-        foreach (Rotator R in obj.Animation.motors.OfType<Rotator>().ToList())
+		foreach (Rotator R in animator.Motors.OfType<Rotator>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -34,7 +33,7 @@ public class StopRotator : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-        base.DrawGUI();
+		base.RenderInspectorGUI(animator);
     }
 
     public override void Enter()

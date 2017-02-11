@@ -1,6 +1,6 @@
 ﻿using System;
 
-[ParkitectObjectTag("Shops")]
+[ParkitectObjectTag("Shop")]
 [Serializable]
 public class ShopParkitectObject : ParkitectObj
 {

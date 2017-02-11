@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 [ExecuteInEditMode]
 [Serializable]
-public class Mover : motor
+public class Mover : Motor
 {
 
     private enum State

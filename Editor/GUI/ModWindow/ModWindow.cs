@@ -11,7 +11,6 @@ public class ModWindow : EditorWindow
 {
 	public static string version = "APLHA v3.0.0";
 	public GUISkin guiSkin;
-	public ParkitectModManager ModManager;
 	private bool enableEditing = false;
 	Texture2D logo;
 	private enum State
@@ -25,7 +24,6 @@ public class ModWindow : EditorWindow
 	ModConfigurationView modConfigurationView = new ModConfigurationView();
 	ModObjectsList  modObjectsView = new ModObjectsList();
 	ParkitectObjTypeSelection parkitectObjTypeSelection = new ParkitectObjTypeSelection();
-	ParkitectObjSingle parkitectObjSingle  = new ParkitectObjSingle();
 
 	public void repaintWindow()
 	{
@@ -69,34 +67,7 @@ public class ModWindow : EditorWindow
 
 	void OnGUI()
 	{
-		ModManager.ValidateSelected();
-		GUI.changed = false;
-		if (!ModManager)
-		{
-			if (FindObjectOfType<ParkitectModManager>())
-			{
-				ModManager = FindObjectOfType<ParkitectModManager>();
-			}
-			else
-			{
-				if (GameObject.Find("ParkitectModManager"))
-				{
-					ModManager = (GameObject.Find("ParkitectModManager")).AddComponent<ParkitectModManager>();
-				}
-				else
-				{
-
-					ModManager = (new GameObject("ParkitectModManager")).AddComponent<ParkitectModManager>();
-				}
-			}
-		}
-		if (ModManager.asset != null)
-		{
-			if (!ModManager.asset.gameObject)
-			{
-				ModManager.asset = null;
-			}
-		}
+		
 		if (enableEditing)
 		{
 			GUI.color = Color.grey;
@@ -120,26 +91,43 @@ public class ModWindow : EditorWindow
 		GUILayout.Label(logo, centeredStyle, GUILayout.MaxWidth(Screen.width), GUILayout.ExpandHeight(false));
 		//Show Mod name
 		GUILayout.BeginHorizontal("flow background");
-		GUILayout.Label(ModManager.mod.name, "LODLevelNotifyText");
+		GUILayout.Label(ModPayload.Instance.name, "LODLevelNotifyText");
 		GUILayout.EndHorizontal();
 
 		Event e = Event.current;
 		modConfigurationView.Render ();
 		modObjectsView.Render (Selection.objects);
 
-		if (ModManager.asset != null && ModManager.asset.gameObject)
-		{
-
-		}
+	
 		if (enableEditing)
 		{
 			GUI.color = Color.grey;
 		}
 
 		parkitectObjTypeSelection.Render (modObjectsView);
-		parkitectObjSingle.RenderInspectorGUI (modObjectsView.selectedParkitectObject);
+		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null) {
+			GUILayout.BeginHorizontal("flow background");
+			GUILayout.Label(modObjectsView.selectedParkitectObject.Prefab.name, "LODLevelNotifyText");
+			GUILayout.EndHorizontal();
 
-		EditorUtility.SetDirty(ModManager);
+			GUILayout.Label(modObjectsView.selectedParkitectObject.key);
+			if (GUILayout.Button ("Update Prefab")) {
+				modObjectsView.selectedParkitectObject.UpdatePrefab ();
+			}
+
+			if (GUILayout.Button ("Create Instance In Scene")) {
+				modObjectsView.selectedParkitectObject.getGameObjectRef (true);
+				modObjectsView.selectedParkitectObject.UpdatePrefab ();
+			}
+
+			Type[] types =  modObjectsView.selectedParkitectObject.SupportedDecorators ();
+			for (int x = 0; x < types.Length; x++) {
+				var decorator = modObjectsView.selectedParkitectObject.GetDecorator (types [x],true);
+				if(decorator != null)
+					decorator.RenderInspectorGUI (modObjectsView.selectedParkitectObject);
+			}
+		}
+		EditorUtility.SetDirty(ModPayload.Instance);
 		GUILayout.Space(50);
 		EditorGUILayout.EndScrollView();
 
@@ -169,9 +157,15 @@ public class ModWindow : EditorWindow
 
 	void OnSceneGUI(SceneView sceneView)
 	{
-        if(parkitectObjSingle != null)
-            parkitectObjSingle.RenderSceneGUI (modObjectsView.selectedParkitectObject);
 
+		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null) {
+			Type[] types =  modObjectsView.selectedParkitectObject.SupportedDecorators ();
+			for (int x = 0; x < types.Length; x++) {
+				var decorator = modObjectsView.selectedParkitectObject.GetDecorator (types [x],true);
+				if(decorator != null)
+					decorator.RenderSceneGUI (modObjectsView.selectedParkitectObject);
+			}
+		}
 	}
 
 }

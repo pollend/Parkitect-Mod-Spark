@@ -14,6 +14,7 @@ public class ParkitectObj : ScriptableObject
 	private List<Decorator> decorators  = new List<Decorator> ();
 	[SerializeField]
 	private GameObject prefab;
+
 	[SerializeField]
 	public string key;
 
@@ -32,7 +33,7 @@ public class ParkitectObj : ScriptableObject
 	{
 		var refrence = getGameObjectRef (false);
 		if (refrence != null) {
-			this.SetGameObject (refrence);
+			prefab = PrefabUtility.ReplacePrefab(refrence, PrefabUtility.GetPrefabParent(refrence), ReplacePrefabOptions.ConnectToPrefab);
 		}
 		LoadDecorators ();
 	}
@@ -89,6 +90,8 @@ public class ParkitectObj : ScriptableObject
 		this.key = gameRef.name;
 		GameObject prefab =  PrefabUtility.CreatePrefab (path, g);
 		PrefabUtility.ConnectGameObjectToPrefab (g, prefab);
+
+
 		name = prefab.name;
 		this.prefab = prefab;
 		EditorUtility.SetDirty (this);
@@ -119,7 +122,7 @@ public class ParkitectObj : ScriptableObject
 
 
 
-	public Decorator GetDecorator(Type t)
+	public Decorator GetDecorator(Type t,bool createInstance)
 	{
 		
 		for (int x = 0; x < decorators.Count; x++)
@@ -131,27 +134,33 @@ public class ParkitectObj : ScriptableObject
 			}
 		}
 
-		Decorator dec = (Decorator)ScriptableObject.CreateInstance (t);
+		if (createInstance) {
+			Decorator dec = (Decorator)ScriptableObject.CreateInstance (t);
 
-		AssetDatabase.AddObjectToAsset (dec,this);
-		EditorUtility.SetDirty(dec);
-		AssetDatabase.SaveAssets();
-		if(!EditorSceneManager.GetActiveScene().isDirty)
-			EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
+			AssetDatabase.AddObjectToAsset (dec, this);
+			EditorUtility.SetDirty (dec);
+			AssetDatabase.SaveAssets ();
+			if (!EditorSceneManager.GetActiveScene ().isDirty)
+				EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene ());
 		
 
-		decorators.Add (dec);
-		return dec;
-		
+			decorators.Add (dec);
+			return dec;
+		}
+		return null;
 	}
 
 
     public void CleanUp()
     {
+		
         for (int x = 0; x < decorators.Count; x++) {
-			decorators [x].CleanUp (this);
-            UnityEngine.Object.DestroyImmediate (decorators[x], true);
+			if (decorators [x] != null) {
+				decorators [x].CleanUp (this);
+				UnityEngine.Object.DestroyImmediate (decorators [x], true);
+			}
         }
+		decorators.Clear ();
     }
    
 

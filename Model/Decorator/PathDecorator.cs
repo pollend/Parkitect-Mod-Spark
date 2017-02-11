@@ -2,16 +2,16 @@
 using UnityEngine;
 using UnityEditor;
 
-public class  PathGUIDecorator : Decorator
+public class  PathDecorator : Decorator
 {
 	public enum PathType { Normal, Queue, Employee }
 	public PathType pathType;
 	public Texture2D PathTexture;
 
-	public PathGUIDecorator ()
+	public PathDecorator ()
 	{
 	}
-
+	#if UNITY_EDITOR
 	public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
 		this.PathTexture = (Texture2D)EditorGUILayout.ObjectField("Texture",this.PathTexture, typeof(Texture2D), true);
@@ -45,6 +45,7 @@ public class  PathGUIDecorator : Decorator
 
 		base.RenderInspectorGUI (parkitectObj);
 	}
+	#endif
 }
 
 

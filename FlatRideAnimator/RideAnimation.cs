@@ -1,18 +1,18 @@
 ﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEditor;
-using System.Collections.ObjectModel;
 
-
-public class AnimatorDecorator : Decorator
+[Serializable]
+[ExecuteInEditMode]
+public class RideAnimation
 {
-	[SerializeField]
-	private List<Motor> motors = new List<Motor>();
 
 	[SerializeField]
-	private List<Phase> phases = new List<Phase>();
+	public List<Motor> motors = new List<Motor>();
+
+	[SerializeField]
+	public List<Phase> phases = new List<Phase>();
 
 	[SerializeField]
 	public Phase currentPhase;
@@ -20,38 +20,6 @@ public class AnimatorDecorator : Decorator
 
 	[SerializeField]
 	public bool animating;
-
-	public  ReadOnlyCollection<Motor> Motors{get{return motors.AsReadOnly ();}}
-
-	public  ReadOnlyCollection<Phase> Phases{get{return phases.AsReadOnly ();}}
-
-	public void AddMotor(Motor motor)
-	{
-		AssetDatabase.AddObjectToAsset (motor,this);
-		EditorUtility.SetDirty(this);
-		AssetDatabase.SaveAssets();
-
-		this.motors.Add (motor);
-	}
-
-	public void RemoveMotor(Motor motor)
-	{
-		this.motors.Remove (motor);
-		DestroyImmediate (motor, true);
-	}
-
-	public void AddPhase(Phase phase)
-	{
-		this.phases.Add (phase);
-	}
-
-	public void RemovePhse(Phase phase)
-	{
-		this.phases.Remove (phase);
-	}
-
-
-
 	public void Animate()
 	{
 		foreach (Motor m in motors)
@@ -65,7 +33,7 @@ public class AnimatorDecorator : Decorator
 			{
 				m.Reset();
 			}
-			foreach (MultipleRotations R in motors.OfType<MultipleRotations>())
+			foreach (MultipleRotations R in motors.OfType<MultipleRotations>().ToList())
 			{
 				R.Reset();
 			}
@@ -83,9 +51,6 @@ public class AnimatorDecorator : Decorator
 		currentPhase.Enter();
 		currentPhase.Run();
 	}
-
-
-
 	void NextPhase()
 	{
 
@@ -101,22 +66,22 @@ public class AnimatorDecorator : Decorator
 			return;
 		}
 		animating = false;
-		foreach (Motor m in motors.OfType<Rotator>())
+		foreach (Motor m in motors.OfType<Rotator>().ToList())
 		{
 			m.Enter();
 
 		}
-		foreach (Rotator m in motors.OfType<Rotator>())
+		foreach (Rotator m in motors.OfType<Rotator>().ToList())
 		{
 			m.axis.localRotation = m.originalRotationValue;
 
 		}
-		foreach (RotateBetween m in motors.OfType<RotateBetween>())
+		foreach (RotateBetween m in motors.OfType<RotateBetween>().ToList())
 		{
 			m.axis.localRotation = m.originalRotationValue;
 
 		}
-		foreach (Mover m in motors.OfType<Mover>())
+		foreach (Mover m in motors.OfType<Mover>().ToList())
 		{
 			m.axis.localPosition = m.originalRotationValue;
 
@@ -134,6 +99,9 @@ public class AnimatorDecorator : Decorator
 				NextPhase();
 			}
 		}
+
 	}
 }
+
+
 

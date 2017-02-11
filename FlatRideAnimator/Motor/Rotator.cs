@@ -5,7 +5,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [Serializable]
-public class Rotator : motor
+public class Rotator : Motor
 {
     public enum State
     {

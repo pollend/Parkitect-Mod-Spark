@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 [ExecuteInEditMode]
 [Serializable]
-public class RotateBetween : motor
+public class RotateBetween : Motor
 {
     [SerializeField]
     public Transform axis;

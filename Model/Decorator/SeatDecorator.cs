@@ -1,8 +1,9 @@
-﻿using System;
+﻿
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
 using System.Linq;
+using System;
 
 public class SeatDecorator : Decorator
 {
@@ -14,7 +15,7 @@ public class SeatDecorator : Decorator
 	public override void Load (ParkitectObj parkitectObj)
 	{
 		seats.Clear ();
-		findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, SEAT, seats);
+		Utility.findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, SEAT, seats);
 		base.Load (parkitectObj);
 	}
 
@@ -26,20 +27,19 @@ public class SeatDecorator : Decorator
 		if (GUILayout.Button("Create 1 Seats"))
 		{
 			GameObject seat1 = new GameObject(SEAT);
-
-
 			seat1.transform.parent = parkitectObj.getGameObjectRef(true).transform;
 
 			seat1.transform.localPosition = new Vector3(0, 0.1f, 0);
 			seat1.transform.localRotation = Quaternion.Euler(Vector3.zero);
 
 			seats.Clear ();
-			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, SEAT, seats);
+			Utility.findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform, SEAT, seats);
 		}
 		if (GUILayout.Button("Create 2 Seat"))
 		{
 			GameObject seat1 = new GameObject(SEAT);
 			GameObject seat2 = new GameObject(SEAT);
+
 
 
 			seat1.transform.parent = parkitectObj.getGameObjectRef(true).transform;
@@ -50,7 +50,7 @@ public class SeatDecorator : Decorator
 			seat2.transform.localPosition = new Vector3(-0.1f, 0.1f, 0);
 			seat2.transform.localRotation = Quaternion.Euler(Vector3.zero);
 			seats.Clear ();
-			findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform,SEAT, seats);
+			Utility.findAllChildrenWithName (parkitectObj.getGameObjectRef (true).transform,SEAT, seats);
 
 		}
 		GUILayout.EndHorizontal();
@@ -58,19 +58,13 @@ public class SeatDecorator : Decorator
         base.RenderInspectorGUI (parkitectObj);
 	}
 
-	private void findAllChildrenWithName(Transform transform,String name,List<GameObject> collection)
-	{
-		for(int i = 0; i < transform.childCount;i++ ) {
-			var temp  = transform.GetChild(i);
-			if (temp.name == name) {
-				collection.Add (temp.gameObject);
-			}
-			findAllChildrenWithName (temp, name, collection);
-		}
-	}
 
 	public override void RenderSceneGUI (ParkitectObj parkitectObj)
 	{
+		//Debug.Log (parkitectObj.Prefab.transform.GetInstanceID ());
+		//Debug.Log (parkitectObj.getGameObjectRef(true).transform.GetInstanceID ());
+
+
 		seats.RemoveAll (x => x == null);
 
 		if(seats != null)

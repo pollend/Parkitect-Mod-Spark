@@ -6,7 +6,7 @@ using System;
 
 [ExecuteInEditMode]
 [Serializable]
-public class MultipleRotations : motor {
+public class MultipleRotations : Motor {
     [SerializeField]
     public Transform mainAxis;
     [SerializeField]

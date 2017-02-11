@@ -10,7 +10,6 @@ public class ChangePendulum : RideAnimationEvent
     [SerializeField]
     public PendulumRotator rotator;
     float lastTime;
-    public ParkitectObject obj;
     public float Friction = 20f;
     public bool Pendulum;
     private float startPendulumPosition;
@@ -23,7 +22,7 @@ public class ChangePendulum : RideAnimationEvent
         }
     }
     
-    public override void DrawGUI()
+	public override void RenderInspectorGUI(AnimatorDecorator animator)
     {
 
         if (rotator)
@@ -32,7 +31,7 @@ public class ChangePendulum : RideAnimationEvent
             Friction = EditorGUILayout.FloatField("Friction", Friction);
             Pendulum = EditorGUILayout.Toggle("Pendulum", Pendulum);
         }
-        foreach (PendulumRotator R in obj.Animation.motors.OfType<PendulumRotator>().ToList())
+		foreach (PendulumRotator R in animator.Motors.OfType<PendulumRotator>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -43,7 +42,7 @@ public class ChangePendulum : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-        base.DrawGUI();
+		base.RenderInspectorGUI(animator);
     }
 
     public override void Enter()

@@ -10,7 +10,6 @@ public class ApplyRotation : RideAnimationEvent
     [SerializeField]
     public MultipleRotations rotator;
     float lastTime;
-    public ParkitectObject obj;
 
 
     public override string EventName
@@ -21,14 +20,14 @@ public class ApplyRotation : RideAnimationEvent
         }
     }
     
-    public override void DrawGUI()
+	public override void RenderInspectorGUI(AnimatorDecorator animator)
     {
 
         if (rotator)
         {
             ColorIdentifier = rotator.ColorIdentifier;
         }
-        foreach (MultipleRotations R in obj.Animation.motors.OfType<MultipleRotations>().ToList())
+		foreach (MultipleRotations R in animator.Motors.OfType<MultipleRotations>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -39,7 +38,7 @@ public class ApplyRotation : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-        base.DrawGUI();
+		base.RenderInspectorGUI(animator);
     }
 
     public override void Enter()

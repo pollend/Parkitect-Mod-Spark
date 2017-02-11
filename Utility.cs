@@ -18,6 +18,18 @@ public static class Utility
 		}
 	}
 
+	public static void findAllChildrenWithName(Transform transform,String name,List<GameObject> collection)
+	{
+		for(int i = 0; i < transform.childCount;i++ ) {
+			var temp  = transform.GetChild(i);
+			if (temp.name == name) {
+				collection.Add (temp.gameObject);
+			}
+			findAllChildrenWithName (temp, name, collection);
+		}
+	}
+
+
 }
 
 

@@ -49,7 +49,7 @@ public class ParkitectObjTypeSelection
 				if (selection != current) {
 					
 					modObjectList.selectedParkitectObject.CleanUp ();
-
+		
 					ParkitectObj pkObj= (ParkitectObj)ScriptableObject.CreateInstance (parkitectObjs [selection]);
 					pkObj.Load (modObjectList.selectedParkitectObject);
 					modObjectList.switchParkitectObject (modObjectList.selectedParkitectObject, pkObj);

@@ -9,7 +9,6 @@ public class FlatRideAnimator : EditorWindow
     
     Vector2 scrollPosPhases;
     Vector2 scrollPosMotors;
-    public ParkitectModManager ModManager;
     bool isPlaying;
     //For Adding events
     Phase curentPhase;
@@ -26,14 +25,22 @@ public class FlatRideAnimator : EditorWindow
     void OnEnable()
     {
         titleContent.image = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Parkitect_ModSpark/Textures/AnimateIcon.png", typeof(Texture2D));
-        EditorApplication.update += CallbackFunction;
+       // EditorApplication.update += CallbackFunction;
     }
     public void repaintWindow()
     {
         Repaint();
     }
+
+
+	private void GetActiveAnimator()
+	{
+		return null;
+	}
+
     void AddEvent(object obj)
     {
+		
         switch (obj.ToString())
         {
             case "Wait":
@@ -42,76 +49,76 @@ public class FlatRideAnimator : EditorWindow
             case "StartRotator":
                 StartRotator SR = CreateInstance < StartRotator>();
                 curentPhase.Events.Add(SR);
-                SR.obj = ModManager.asset;
+                //SR.obj = ModManager.asset;
                 break;
             case "SpinRotator":
                 SpinRotater SpR = CreateInstance<SpinRotater>();
                 curentPhase.Events.Add(SpR);
-                SpR.obj = ModManager.asset;
+                //SpR.obj = ModManager.asset;
                 break;
             case "StopRotator":
                 StopRotator StR = CreateInstance < StopRotator>();
                 curentPhase.Events.Add(StR);
-                StR.obj = ModManager.asset;
+               // StR.obj = ModManager.asset;
                 break;
             case "From-ToRot":
                 FromToRot FT = CreateInstance<FromToRot>();
                 curentPhase.Events.Add(FT);
-                FT.obj = ModManager.asset;
+              //  FT.obj = ModManager.asset;
                 break;
             case "To-FromRot":
                 ToFromRot TF = CreateInstance<ToFromRot>();
                 curentPhase.Events.Add(TF);
-                TF.obj = ModManager.asset;
+              //  TF.obj = ModManager.asset;
                 break;
             case "From-ToMove":
                 FromToMove FTM = CreateInstance<FromToMove>();
                 curentPhase.Events.Add(FTM);
-                FTM.obj = ModManager.asset;
+               // FTM.obj = ModManager.asset;
                 break;
             case "To-FromMove":
                 ToFromMove TFM = CreateInstance<ToFromMove>();
                 curentPhase.Events.Add(TFM);
-                TFM.obj = ModManager.asset;
+                //TFM.obj = ModManager.asset;
                 break;
             case "ApplyRotations":
                 ApplyRotation AP = CreateInstance<ApplyRotation>();
                 curentPhase.Events.Add(AP);
-                AP.obj = ModManager.asset;
+                //AP.obj = ModManager.asset;
                 break;
             case "ChangePendulum":
                 ChangePendulum WU = CreateInstance<ChangePendulum>();
                 curentPhase.Events.Add(WU);
-                WU.obj = ModManager.asset;
+               // WU.obj = ModManager.asset;
                 break;
             case "Rotator":
                 Rotator R = CreateInstance<Rotator>();
-                ModManager.asset.Animation.motors.Add(R);
-                R.Identifier = "Rotator_" + ModManager.asset.Animation.motors.Count();
+                //ModManager.asset.Animation.motors.Add(R);
+                //R.Identifier = "Rotator_" + ModManager.asset.Animation.motors.Count();
 
                 break;
             case "PendulumRotator":
                 PendulumRotator PR = CreateInstance<PendulumRotator>();
-                ModManager.asset.Animation.motors.Add(PR);
-                PR.Identifier = "PendulumRotator_" + ModManager.asset.Animation.motors.Count();
+                //ModManager.asset.Animation.motors.Add(PR);
+                //PR.Identifier = "PendulumRotator_" + ModManager.asset.Animation.motors.Count();
 
                 break;
             case "RotateBetween":
                 RotateBetween RB = CreateInstance<RotateBetween>();
-                ModManager.asset.Animation.motors.Add(RB);
-                RB.Identifier = "RotateBetween_" + ModManager.asset.Animation.motors.Count();
+               // ModManager.asset.Animation.motors.Add(RB);
+               // RB.Identifier = "RotateBetween_" + ModManager.asset.Animation.motors.Count();
 
                 break;
             case "Mover":
                 Mover M = CreateInstance<Mover>();
-                ModManager.asset.Animation.motors.Add(M);
-                M.Identifier = "Mover_" + ModManager.asset.Animation.motors.Count();
+              //  ModManager.asset.Animation.motors.Add(M);
+               // M.Identifier = "Mover_" + ModManager.asset.Animation.motors.Count();
 
                 break;
             case "MultiplyRotations":
                 MultipleRotations MR = CreateInstance<MultipleRotations>();
-                ModManager.asset.Animation.motors.Add(MR);
-                MR.Identifier = "MultiplyRotations_" + ModManager.asset.Animation.motors.Count();
+              //  ModManager.asset.Animation.motors.Add(MR);
+              //  MR.Identifier = "MultiplyRotations_" + ModManager.asset.Animation.motors.Count();
 
                 break;
             default:
@@ -125,11 +132,20 @@ public class FlatRideAnimator : EditorWindow
     }
     void OnGUI()
     {
-        if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
+		if (ModPayload.Instance.selectedParkitectObject == null)
+			return;
+		AnimatorDecorator animator = (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		if (animator == null)
+			return;
+
+
+
+       //if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
         {
 
-            EditorUtility.SetDirty(ModManager);
-            foreach(Phase p in ModManager.asset.Animation.phases)
+			EditorUtility.SetDirty(animator);
+
+			foreach(Phase p in animator.Phases)
             {
                 foreach (RideAnimationEvent RAE in p.Events)
                 {
@@ -137,23 +153,20 @@ public class FlatRideAnimator : EditorWindow
                 }
 
             }
-            foreach(motor m in ModManager.asset.Animation.motors)
+			foreach(Motor m in animator.Motors)
                 EditorUtility.SetDirty(m);
             Event e = Event.current;
-            if (ModManager.asset.Animation == null)
-            {
-                ModManager.asset.Animation = new RideAnimation();
-            }
+     
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
             GUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginVertical("grey_border", GUILayout.Width(300));
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
-            DrawToolStripEvents();
+			DrawToolStripEvents(animator);
             GUILayout.EndHorizontal();
             scrollPosMotors = EditorGUILayout.BeginScrollView(scrollPosMotors, "grey_border");
-            foreach (motor m in ModManager.asset.Animation.motors)
+			foreach (Motor m in animator.Motors)
             {
 
                
@@ -166,7 +179,7 @@ public class FlatRideAnimator : EditorWindow
                     m.showSettings = !m.showSettings;
                     if (e.button == 1)
                     {
-                        ModManager.asset.Animation.motors.Remove(m);
+						animator.RemoveMotor (m);//.Remove(m);
                         DestroyImmediate(m);
                         return;
                     }
@@ -198,16 +211,16 @@ public class FlatRideAnimator : EditorWindow
             {
                 // Now create the menu, add items and show it
                 
-                ModManager.asset.Animation.phases.Add(new Phase());
+				animator.AddPhase (new Phase ());//.Add(new Phase());
             }
             EditorGUILayout.EndVertical();
             scrollPosPhases = EditorGUILayout.BeginScrollView(scrollPosPhases, "grey_border", GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginHorizontal();
-            if (ModManager.asset.Animation != null)
+            //if (ModManager.asset.Animation != null)
             {
-                for (int i = 0; i < ModManager.asset.Animation.phases.Count; i++) // Loop with for.
+				for (int i = 0; i < animator.Phases.Count; i++) // Loop with for.
                 {
-                    if (ModManager.asset.Animation.phases[i] == ModManager.asset.Animation.currentPhase)
+					if (animator.Phases[i] == animator.currentPhase)
                     {
                         GUI.color = Color.Lerp(Color.green, new Color(1, 1, 1), .7f);
                     }
@@ -217,7 +230,7 @@ public class FlatRideAnimator : EditorWindow
                     if (GUILayout.Button(" Add Event", "OL Plus"))
                     {
                         GUI.FocusControl("");
-                        curentPhase = ModManager.asset.Animation.phases[i];
+						curentPhase = animator.Phases[i];
                         // Now create the menu, add items and show it
                         GenericMenu menu = new GenericMenu();
                         menu.AddItem(new GUIContent("WaitForSeconds"), false, AddEvent, "Wait");
@@ -233,27 +246,27 @@ public class FlatRideAnimator : EditorWindow
                         menu.ShowAsContext();
                         e.Use();
                     }
-                    foreach (RideAnimationEvent RAE in ModManager.asset.Animation.phases[i].Events)
+					foreach (RideAnimationEvent RAE in animator.Phases[i].Events)
                     {
 
                         EditorGUILayout.BeginVertical("ShurikenEffectBg");
                         GUI.color = Color.Lerp(new Color(RAE.ColorIdentifier.r, RAE.ColorIdentifier.g, RAE.ColorIdentifier.b), new Color(1, 1, 1), .7f);
                         string Done = "";
-                        if(ModManager.asset.Animation.animating && RAE.done)
+						if(animator.animating && RAE.done)
                             Done = " ✓";
                         if (GUILayout.Button(RAE.EventName + Done, "ShurikenModuleTitle"))
                         { GUI.FocusControl("");
                             RAE.showSettings = !RAE.showSettings;
                             if (e.button == 1)
                             {
-                                ModManager.asset.Animation.phases[i].Events.Remove(RAE);
+								animator.Phases[i].Events.Remove(RAE);
                                 return;
                             }
 
                         }
                         GUI.color = Color.white;
                         if (RAE.showSettings)
-                            RAE.DrawGUI();
+							RAE.RenderInspectorGUI(animator);
                         EditorGUILayout.EndVertical();
                     }
                     GUILayout.FlexibleSpace();
@@ -266,7 +279,7 @@ public class FlatRideAnimator : EditorWindow
 
                         if (GUILayout.Button("<<", "minibuttonleft"))
                         {
-                            ModManager.asset.Animation.phases.Move(i, ListExtensions.MoveDirection.Up);
+							animator.Phases.Move(i, ListExtensions.MoveDirection.Up);
                         }
                     }
                     else
@@ -276,13 +289,13 @@ public class FlatRideAnimator : EditorWindow
                     if (GUILayout.Button("Clone", "minibuttonmid"))
                     {
 
-                        ModManager.asset.Animation.phases.Add(ModManager.asset.Animation.phases[i].ShallowCopy());
+						animator.AddPhase(animator.Phases[i].ShallowCopy());
                     }
-                    if (i != ModManager.asset.Animation.phases.Count -1 )
+					if (i != animator.Phases.Count -1 )
                     { 
                         if (GUILayout.Button(">>", "minibuttonright"))
                         {
-                            ModManager.asset.Animation.phases.Move(i, ListExtensions.MoveDirection.Down);
+							animator.Phases.Move(i, ListExtensions.MoveDirection.Down);
                         }
                     }
                     else
@@ -292,7 +305,7 @@ public class FlatRideAnimator : EditorWindow
                     EditorGUILayout.EndHorizontal();
                     if (GUILayout.Button(" Delete Phase", "OL Minus"))
                     {
-                        ModManager.asset.Animation.phases.Remove(ModManager.asset.Animation.phases[i]);
+						animator.RemovePhse(animator.Phases[i]);
                     }
                     EditorGUILayout.EndVertical();
                     GUI.color = Color.white;
@@ -314,32 +327,23 @@ public class FlatRideAnimator : EditorWindow
 
     void OnFocus()
     {
-        if (FindObjectOfType<ParkitectModManager>())
-        {
-            ModManager = FindObjectOfType<ParkitectModManager>();
-        }
-        else
-        {
-            ModManager = null;
-        }
-
         SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
         // Add (or re-add) the delegate.
         SceneView.onSceneGUIDelegate += this.OnSceneGUI;
 
     }
-    void ResetMotors()
+	void ResetMotors(AnimatorDecorator animator)
     {
-        foreach (motor m in ModManager.asset.Animation.motors)
+		foreach (Motor m in animator.Motors)
         {
             m.Reset();
         }
-        foreach(MultipleRotations R in ModManager.asset.Animation.motors.OfType<MultipleRotations>().ToList())
+		foreach(MultipleRotations R in animator.Motors.OfType<MultipleRotations>())
         {
             R.Reset();
         }
     }
-    void DrawToolStripEvents()
+	void DrawToolStripEvents(AnimatorDecorator animator)
     {
         string button;
         if (isPlaying)
@@ -355,12 +359,12 @@ public class FlatRideAnimator : EditorWindow
         
         if (isPlaying)
         {
-           if(!ModManager.asset.Animation.animating)
+			if(!animator.animating)
             {
-                ResetMotors();
-                ModManager.asset.Animation.currentPhase = null;
+				ResetMotors(animator);
+				animator.currentPhase = null;
             }
-            isPlaying = ModManager.asset.Animation.animating;
+			isPlaying = animator.animating;
             
             
         }
@@ -370,15 +374,15 @@ public class FlatRideAnimator : EditorWindow
             isPlaying = !isPlaying;
             if (isPlaying)
             {
-                ModManager.asset.Animation.Animate();
-                isPlaying = ModManager.asset.Animation.animating;
+				animator.Animate();
+				isPlaying = animator.animating;
 
             }
             else
             {
-                ResetMotors();
+				ResetMotors(animator);
 
-                ModManager.asset.Animation.currentPhase = null;
+				animator.currentPhase = null;
             }
         }
         GUI.color = Color.white;
@@ -390,13 +394,18 @@ public class FlatRideAnimator : EditorWindow
     {
         SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
     }
-    void OnSceneGUI(SceneView sceneView)
+	void OnSceneGUI(SceneView sceneView)
     {
+		if (ModPayload.Instance.selectedParkitectObject == null)
+			return;
+		AnimatorDecorator animator = (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		if (animator == null)
+			return;
 
-        if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
+       // if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
         {
             
-            foreach (Rotator R in ModManager.asset.Animation.motors.OfType<Rotator>().ToList())
+			foreach (Rotator R in animator.Motors.OfType<Rotator>().ToList())
             {
 
                 if (R && R.axis)
@@ -410,7 +419,7 @@ public class FlatRideAnimator : EditorWindow
                     }
                 }
             }
-            foreach (RotateBetween R in ModManager.asset.Animation.motors.OfType<RotateBetween>().ToList())
+			foreach (RotateBetween R in animator.Motors.OfType<RotateBetween>().ToList())
             {
 
                 if (R && R.axis)
@@ -432,7 +441,7 @@ public class FlatRideAnimator : EditorWindow
                    
                 }
             }
-            foreach (Mover R in ModManager.asset.Animation.motors.OfType<Mover>().ToList())
+			foreach (Mover R in animator.Motors.OfType<Mover>().ToList())
             {
 
                 if (R && R.axis)
@@ -451,8 +460,14 @@ public class FlatRideAnimator : EditorWindow
             Handles.EndGUI();
         }
     }
-    private void CallbackFunction()
+	private void CallbackFunction()
     {
+		if (ModPayload.Instance.selectedParkitectObject == null)
+			return;
+		AnimatorDecorator animator = (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		if (animator == null)
+			return;
+
         if(isPlaying)
         {
             foreach(ReflectionProbe RP in ReflectionProbes)
@@ -461,7 +476,7 @@ public class FlatRideAnimator : EditorWindow
             }
             repaintWindow();
 
-            ModManager.asset.Animation.Run();
+			animator.Run();
         }
     }
     void OnDisable()
