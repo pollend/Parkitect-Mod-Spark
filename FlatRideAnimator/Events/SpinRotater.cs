@@ -23,7 +23,7 @@ public class SpinRotater : RideAnimationEvent
             return "SpinRotator";
         }
     }
-	public override void RenderInspectorGUI(AnimatorDecorator animator)
+	public override void RenderInspectorGUI(Motor[] motors)
     {
 
         if (rotator)
@@ -36,7 +36,7 @@ public class SpinRotater : RideAnimationEvent
             EditorGUILayout.LabelField("Amount " + rotator.getRotationsCount());
         }
         
-		foreach (Rotator R in animator.Motors.OfType<Rotator>().ToList())
+		foreach (Rotator R in motors.OfType<Rotator>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -46,7 +46,7 @@ public class SpinRotater : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-		base.RenderInspectorGUI(animator);
+		base.RenderInspectorGUI(motors);
     }
 
     public override void Enter()
@@ -55,7 +55,7 @@ public class SpinRotater : RideAnimationEvent
         rotator.resetRotations();
         base.Enter();
     }
-    public override void Run()
+	public override void Run(Transform root)
     {
         if (rotator)
         {
@@ -73,7 +73,7 @@ public class SpinRotater : RideAnimationEvent
             else
             { done = true;}
             
-            base.Run();
+			base.Run(root);
         }
 
     }

@@ -22,7 +22,7 @@ public class ChangePendulum : RideAnimationEvent
         }
     }
     
-	public override void RenderInspectorGUI(AnimatorDecorator animator)
+	public override void RenderInspectorGUI(Motor[] motors)
     {
 
         if (rotator)
@@ -31,7 +31,7 @@ public class ChangePendulum : RideAnimationEvent
             Friction = EditorGUILayout.FloatField("Friction", Friction);
             Pendulum = EditorGUILayout.Toggle("Pendulum", Pendulum);
         }
-		foreach (PendulumRotator R in animator.Motors.OfType<PendulumRotator>().ToList())
+		foreach (PendulumRotator R in motors.OfType<PendulumRotator>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -42,7 +42,7 @@ public class ChangePendulum : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-		base.RenderInspectorGUI(animator);
+		base.RenderInspectorGUI(motors);
     }
 
     public override void Enter()
@@ -51,7 +51,7 @@ public class ChangePendulum : RideAnimationEvent
         rotator.angularFriction = Friction;
         done = true;
     }
-    public override void Run()
+	public override void Run(Transform root)
     {
         if (rotator)
         {

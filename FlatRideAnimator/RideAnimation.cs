@@ -20,28 +20,28 @@ public class RideAnimation
 
 	[SerializeField]
 	public bool animating;
-	public void Animate()
+	public void Animate(Transform root)
 	{
 		foreach (Motor m in motors)
 		{
-			m.Enter();
+			m.Enter(root);
 		}
 		if (phases.Count <= 0)
 		{
 			animating = false;
 			foreach (Motor m in motors)
 			{
-				m.Reset();
+				m.Reset(root);
 			}
 			foreach (MultipleRotations R in motors.OfType<MultipleRotations>().ToList())
 			{
-				R.Reset();
+				R.Reset(root);
 			}
 			return;
 		}
 		foreach (Motor m in motors)
 		{
-			m.Enter();
+			m.Enter(root);
 		}
 
 		animating = true;
@@ -49,9 +49,9 @@ public class RideAnimation
 		currentPhase = phases[phaseNum];
 		currentPhase.running = true;
 		currentPhase.Enter();
-		currentPhase.Run();
+		currentPhase.Run(root);
 	}
-	void NextPhase()
+	void NextPhase(Transform root)
 	{
 
 		currentPhase.Exit();
@@ -62,13 +62,13 @@ public class RideAnimation
 			currentPhase = phases[phaseNum];
 			currentPhase.running = true;
 			currentPhase.Enter();
-			currentPhase.Run();
+			currentPhase.Run(root);
 			return;
 		}
 		animating = false;
 		foreach (Motor m in motors.OfType<Rotator>().ToList())
 		{
-			m.Enter();
+			m.Enter(root);
 
 		}
 		foreach (Rotator m in motors.OfType<Rotator>().ToList())
@@ -83,20 +83,22 @@ public class RideAnimation
 		}
 		foreach (Mover m in motors.OfType<Mover>().ToList())
 		{
-			m.axis.localPosition = m.originalRotationValue;
+			Transform transform =  m.axis.FindSceneRefrence (root);
+			if(transform != null)
+				transform.localPosition = m.originalRotationValue;
 
 		}
 
 		currentPhase = null;
 	}
-	public void Run()
+	public void Run(Transform root)
 	{
 		if (currentPhase != null)
 		{
-			currentPhase.Run();
+			currentPhase.Run(root);
 			if (!currentPhase.running)
 			{
-				NextPhase();
+				NextPhase(root);
 			}
 		}
 

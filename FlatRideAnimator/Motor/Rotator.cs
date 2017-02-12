@@ -45,11 +45,12 @@ public class Rotator : Motor
     [SerializeField]
     public Transform axis;
 
-    public override void Reset()
+
+	public override void Reset(Transform root)
     {
         if(axis)
         axis.localRotation = originalRotationValue;
-        base.Reset();
+		base.Reset(root);
     }
     public override string EventName
     {
@@ -58,7 +59,7 @@ public class Rotator : Motor
             return "Rotator";
         }
     }
-    public override void DrawGUI()
+	public override void DrawGUI(Transform root)
     {
 
         Identifier = EditorGUILayout.TextField("Name ", Identifier);
@@ -66,9 +67,9 @@ public class Rotator : Motor
         maxSpeed = EditorGUILayout.FloatField("maxSpeed", maxSpeed);
         accelerationSpeed = EditorGUILayout.FloatField("accelerationSpeed", accelerationSpeed);
         rotationAxis = EditorGUILayout.Vector3Field("rotationAxis", rotationAxis);
-        base.DrawGUI();
+		base.DrawGUI(root);
     }
-    public override void Enter()
+	public override void Enter(Transform root)
     {
         originalRotationValue = axis.localRotation;
         resetRotations();
@@ -76,7 +77,7 @@ public class Rotator : Motor
         currentSpeed = 0;
         changeState(State.STARTING);
         Initialize(axis, accelerationSpeed, maxSpeed, rotationAxis);
-        base.Enter();
+		base.Enter(root);
     }
         
     public void Initialize(Transform axis, float accelerationSpeed, float maxSpeed)

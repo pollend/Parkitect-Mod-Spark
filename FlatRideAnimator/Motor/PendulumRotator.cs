@@ -13,13 +13,13 @@ public class PendulumRotator : Rotator
     [SerializeField]
     public bool pendulum;
 
-    public override void DrawGUI()
+	public override void DrawGUI(Transform root)
     {
         armLength = EditorGUILayout.FloatField("armLength ", armLength);
         gravity = EditorGUILayout.FloatField("gravity", gravity);
         angularFriction = EditorGUILayout.FloatField("angularFriction", angularFriction);
         pendulum = EditorGUILayout.Toggle("pendulum", pendulum);
-        base.DrawGUI();
+		base.DrawGUI(root);
     }
     public override string EventName
     {

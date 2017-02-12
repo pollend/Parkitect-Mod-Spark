@@ -18,7 +18,6 @@ public class FlatrideDecorator : Decorator
 	public override void RenderInspectorGUI (ParkitectObj parkitectObj)
 	{
 
-
 		GUILayout.Space(10);
 		GUILayout.Label("Rating", EditorStyles.boldLabel);
 		this.Excitement = EditorGUILayout.Slider("Excitement (" + getRatingCategory(this.Excitement) + ")", this.Excitement, 0, 100);

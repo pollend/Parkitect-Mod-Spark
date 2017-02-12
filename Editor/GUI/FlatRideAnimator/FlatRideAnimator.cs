@@ -11,7 +11,8 @@ public class FlatRideAnimator : EditorWindow
     Vector2 scrollPosMotors;
     bool isPlaying;
     //For Adding events
-    Phase curentPhase;
+    private Phase curentPhase;
+
     List<ReflectionProbe> ReflectionProbes = new List<ReflectionProbe>();
     // Add menu named "My Window" to the Window menu
     [MenuItem("Parkitect/Flat-Ride Animator", false, 2)]
@@ -25,7 +26,8 @@ public class FlatRideAnimator : EditorWindow
     void OnEnable()
     {
         titleContent.image = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Parkitect_ModSpark/Textures/AnimateIcon.png", typeof(Texture2D));
-       // EditorApplication.update += CallbackFunction;
+
+		EditorApplication.update += CallbackFunction;
     }
     public void repaintWindow()
     {
@@ -33,92 +35,86 @@ public class FlatRideAnimator : EditorWindow
     }
 
 
-	private void GetActiveAnimator()
+	private AnimatorDecorator GetActiveAnimator()
 	{
-		return null;
+		if (ModPayload.Instance.selectedParkitectObject == null)
+			return null;
+		return (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		
+	}
+
+	private Transform getSceneTransform()
+	{
+		var gameObjectref =  ModPayload.Instance.selectedParkitectObject.getGameObjectRef (false);
+		if (gameObjectref == null)
+			return null;
+
+		return gameObjectref.transform;
 	}
 
     void AddEvent(object obj)
     {
-		
+		AnimatorDecorator animator = GetActiveAnimator ();
         switch (obj.ToString())
         {
             case "Wait":
-                curentPhase.Events.Add(CreateInstance < Wait>());
+				curentPhase.AddEvent(ScriptableObject.CreateInstance< Wait>());
                 break;
             case "StartRotator":
-                StartRotator SR = CreateInstance < StartRotator>();
-                curentPhase.Events.Add(SR);
-                //SR.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance< StartRotator>());
                 break;
             case "SpinRotator":
-                SpinRotater SpR = CreateInstance<SpinRotater>();
-                curentPhase.Events.Add(SpR);
-                //SpR.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance<SpinRotater>());
                 break;
             case "StopRotator":
-                StopRotator StR = CreateInstance < StopRotator>();
-                curentPhase.Events.Add(StR);
-               // StR.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance< StopRotator>());
                 break;
             case "From-ToRot":
-                FromToRot FT = CreateInstance<FromToRot>();
-                curentPhase.Events.Add(FT);
-              //  FT.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance<FromToRot>());
                 break;
             case "To-FromRot":
-                ToFromRot TF = CreateInstance<ToFromRot>();
-                curentPhase.Events.Add(TF);
-              //  TF.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance<ToFromRot>());
                 break;
             case "From-ToMove":
-                FromToMove FTM = CreateInstance<FromToMove>();
-                curentPhase.Events.Add(FTM);
-               // FTM.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance<FromToMove>());
                 break;
             case "To-FromMove":
-                ToFromMove TFM = CreateInstance<ToFromMove>();
-                curentPhase.Events.Add(TFM);
-                //TFM.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance<ToFromMove>());
                 break;
             case "ApplyRotations":
-                ApplyRotation AP = CreateInstance<ApplyRotation>();
-                curentPhase.Events.Add(AP);
-                //AP.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance<ApplyRotation>());
                 break;
             case "ChangePendulum":
-                ChangePendulum WU = CreateInstance<ChangePendulum>();
-                curentPhase.Events.Add(WU);
-               // WU.obj = ModManager.asset;
+				curentPhase.AddEvent(ScriptableObject.CreateInstance<ChangePendulum>());
                 break;
-            case "Rotator":
-                Rotator R = CreateInstance<Rotator>();
-                //ModManager.asset.Animation.motors.Add(R);
-                //R.Identifier = "Rotator_" + ModManager.asset.Animation.motors.Count();
+			case "Rotator":
+				Rotator R = CreateInstance<Rotator> ();
+				animator.AddMotor (R);
+				R.Identifier = "Rotator_" + animator.Motors.Count();
 
                 break;
             case "PendulumRotator":
                 PendulumRotator PR = CreateInstance<PendulumRotator>();
-                //ModManager.asset.Animation.motors.Add(PR);
-                //PR.Identifier = "PendulumRotator_" + ModManager.asset.Animation.motors.Count();
+				animator.AddMotor (PR);    
+				PR.Identifier = "PendulumRotator_" + animator.Motors.Count();
 
                 break;
             case "RotateBetween":
                 RotateBetween RB = CreateInstance<RotateBetween>();
-               // ModManager.asset.Animation.motors.Add(RB);
-               // RB.Identifier = "RotateBetween_" + ModManager.asset.Animation.motors.Count();
+				animator.AddMotor (RB);     
+				RB.Identifier = "RotateBetween_" + animator.Motors.Count();
 
                 break;
             case "Mover":
                 Mover M = CreateInstance<Mover>();
-              //  ModManager.asset.Animation.motors.Add(M);
-               // M.Identifier = "Mover_" + ModManager.asset.Animation.motors.Count();
+				animator.AddMotor (M);  
+				M.Identifier = "Mover_" + animator.Motors.Count();
 
                 break;
             case "MultiplyRotations":
                 MultipleRotations MR = CreateInstance<MultipleRotations>();
-              //  ModManager.asset.Animation.motors.Add(MR);
-              //  MR.Identifier = "MultiplyRotations_" + ModManager.asset.Animation.motors.Count();
+				animator.AddMotor (MR);    
+				MR.Identifier = "MultiplyRotations_" + animator.Motors.Count();
 
                 break;
             default:
@@ -132,13 +128,14 @@ public class FlatRideAnimator : EditorWindow
     }
     void OnGUI()
     {
-		if (ModPayload.Instance.selectedParkitectObject == null)
-			return;
-		AnimatorDecorator animator = (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		AnimatorDecorator animator = GetActiveAnimator ();
 		if (animator == null)
 			return;
+		Transform sceneTransform =  getSceneTransform ();
+		if (sceneTransform == null)
+			return;
 
-
+	
 
        //if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
         {
@@ -163,7 +160,7 @@ public class FlatRideAnimator : EditorWindow
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginVertical("grey_border", GUILayout.Width(300));
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
-			DrawToolStripEvents(animator);
+			DrawToolStripEvents(animator,sceneTransform);
             GUILayout.EndHorizontal();
             scrollPosMotors = EditorGUILayout.BeginScrollView(scrollPosMotors, "grey_border");
 			foreach (Motor m in animator.Motors)
@@ -188,8 +185,9 @@ public class FlatRideAnimator : EditorWindow
                 }
 
                 GUI.color = Color.white;
+
                 if (m.showSettings)
-                    m.DrawGUI();
+					m.DrawGUI(sceneTransform);
                 EditorGUILayout.EndVertical();
             }
             GUILayout.FlexibleSpace();
@@ -259,14 +257,14 @@ public class FlatRideAnimator : EditorWindow
                             RAE.showSettings = !RAE.showSettings;
                             if (e.button == 1)
                             {
-								animator.Phases[i].Events.Remove(RAE);
+								animator.Phases[i].DeleteEvent(RAE);
                                 return;
                             }
 
                         }
                         GUI.color = Color.white;
                         if (RAE.showSettings)
-							RAE.RenderInspectorGUI(animator);
+							RAE.RenderInspectorGUI(animator.Motors.ToArray());
                         EditorGUILayout.EndVertical();
                     }
                     GUILayout.FlexibleSpace();
@@ -305,7 +303,7 @@ public class FlatRideAnimator : EditorWindow
                     EditorGUILayout.EndHorizontal();
                     if (GUILayout.Button(" Delete Phase", "OL Minus"))
                     {
-						animator.RemovePhse(animator.Phases[i]);
+						animator.RemovePhase(animator.Phases[i]);
                     }
                     EditorGUILayout.EndVertical();
                     GUI.color = Color.white;
@@ -332,18 +330,18 @@ public class FlatRideAnimator : EditorWindow
         SceneView.onSceneGUIDelegate += this.OnSceneGUI;
 
     }
-	void ResetMotors(AnimatorDecorator animator)
+	void ResetMotors(AnimatorDecorator animator,Transform root)
     {
 		foreach (Motor m in animator.Motors)
         {
-            m.Reset();
+			m.Reset(root);
         }
 		foreach(MultipleRotations R in animator.Motors.OfType<MultipleRotations>())
         {
-            R.Reset();
+			R.Reset(root);
         }
     }
-	void DrawToolStripEvents(AnimatorDecorator animator)
+	void DrawToolStripEvents(AnimatorDecorator animator,Transform root)
     {
         string button;
         if (isPlaying)
@@ -361,7 +359,7 @@ public class FlatRideAnimator : EditorWindow
         {
 			if(!animator.animating)
             {
-				ResetMotors(animator);
+				ResetMotors(animator,root);
 				animator.currentPhase = null;
             }
 			isPlaying = animator.animating;
@@ -374,13 +372,13 @@ public class FlatRideAnimator : EditorWindow
             isPlaying = !isPlaying;
             if (isPlaying)
             {
-				animator.Animate();
+				animator.Animate(root);
 				isPlaying = animator.animating;
 
             }
             else
             {
-				ResetMotors(animator);
+				ResetMotors(animator,root);
 
 				animator.currentPhase = null;
             }
@@ -396,11 +394,13 @@ public class FlatRideAnimator : EditorWindow
     }
 	void OnSceneGUI(SceneView sceneView)
     {
-		if (ModPayload.Instance.selectedParkitectObject == null)
-			return;
-		AnimatorDecorator animator = (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		AnimatorDecorator animator = GetActiveAnimator ();
 		if (animator == null)
 			return;
+		Transform sceneTransform =  getSceneTransform ();
+		if (sceneTransform == null)
+			return;
+
 
        // if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
         {
@@ -443,15 +443,17 @@ public class FlatRideAnimator : EditorWindow
             }
 			foreach (Mover R in animator.Motors.OfType<Mover>().ToList())
             {
-
-                if (R && R.axis)
+				if (R != null)
                 {
-
-                    Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 1);
-                    Handles.DrawLine(R.axis.position, R.axis.TransformPoint(R.toPosition) - R.axis.localPosition);
-                    Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 0.5f);
-                    Handles.SphereCap(0, R.axis.position, R.axis.rotation, .1f);
-                    Handles.SphereCap(0, R.axis.TransformPoint(R.toPosition) - R.axis.localPosition, R.axis.rotation, .1f);
+					Transform transform =  R.axis.FindSceneRefrence (sceneTransform);
+					if (transform != null) {
+						
+						Handles.color = new Color (R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 1);
+						Handles.DrawLine (transform.position, transform.TransformPoint (R.toPosition) - transform.localPosition);
+						Handles.color = new Color (R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 0.5f);
+						Handles.SphereCap (0, transform.position, transform.rotation, .1f);
+						Handles.SphereCap (0, transform.TransformPoint (R.toPosition) - transform.localPosition, transform.rotation, .1f);
+					}
                 }
             }
             Handles.BeginGUI();
@@ -468,6 +470,10 @@ public class FlatRideAnimator : EditorWindow
 		if (animator == null)
 			return;
 
+		Transform sceneTransform =  this.getSceneTransform ();
+		if (sceneTransform == null)
+			return;
+		
         if(isPlaying)
         {
             foreach(ReflectionProbe RP in ReflectionProbes)
@@ -476,7 +482,7 @@ public class FlatRideAnimator : EditorWindow
             }
             repaintWindow();
 
-			animator.Run();
+			animator.Run(sceneTransform);
         }
     }
     void OnDisable()

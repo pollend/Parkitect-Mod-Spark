@@ -11,7 +11,7 @@ public class RideAnimationEvent : ScriptableObject
 	public Color ColorIdentifier;
 	public virtual string EventName { set; get; }
 
-	public virtual void RenderInspectorGUI(AnimatorDecorator animator)
+	public virtual void RenderInspectorGUI(Motor[] motors)
 	{
 
 	}
@@ -19,7 +19,7 @@ public class RideAnimationEvent : ScriptableObject
 	{
 		isPlaying = true;
 	}
-	public virtual void Run()
+	public virtual void Run(Transform root)
 	{
 
 	}

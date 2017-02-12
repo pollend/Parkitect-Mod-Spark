@@ -12,7 +12,8 @@ public class Mover : Motor
         STOPPED
     }
     [SerializeField]
-    public Transform axis;
+	public RefrencedTransform axis = new RefrencedTransform();
+
     [SerializeField]
     public Vector3 originalRotationValue;
     [SerializeField]
@@ -31,13 +32,14 @@ public class Mover : Motor
     [SerializeField]
     private int direction = -1;
 
-    public override void Reset()
+	public override void Reset(Transform root)
     {
-        if (axis)
-            axis.localPosition = originalRotationValue;
+		Transform transform =  axis.FindSceneRefrence (root);
+		if (transform)
+			transform.localPosition = originalRotationValue;
         currentPosition = 1f;
         direction = -1;
-        base.Reset();
+		base.Reset(root);
     }
     public override string EventName
     {
@@ -46,35 +48,37 @@ public class Mover : Motor
             return "Mover";
         }
     }
-    public override void DrawGUI()
+	public override void DrawGUI(Transform root)
     {
+		Identifier = EditorGUILayout.TextField("Name ", Identifier);
+        
 
-        Identifier = EditorGUILayout.TextField("Name ", Identifier);
-        axis = (Transform)EditorGUILayout.ObjectField("axis", axis, typeof(Transform), true);
+		axis.SetSceneTransform((Transform)EditorGUILayout.ObjectField("axis", axis.FindSceneRefrence (root), typeof(Transform), true));
         toPosition = EditorGUILayout.Vector3Field("Move To", toPosition);
         duration = EditorGUILayout.FloatField("Time", duration);
-        base.DrawGUI();
+		base.DrawGUI(root);
 
     }
-    public override void Enter()
+	public override void Enter(Transform root)
     {
-        if(axis)
-        originalRotationValue = axis.localPosition;
+		Transform transform = axis.FindSceneRefrence (root);
+		if(transform)
+			originalRotationValue = transform.localPosition;
         this.currentPosition = 1f;
 
         direction = -1;
-        Initialize(axis, axis.localPosition, toPosition, duration);
-        base.Enter();
+		Initialize(root,axis.FindSceneRefrence(root), transform.localPosition, toPosition, duration);
+		base.Enter(root);
     }
-    public void Initialize(Transform axis, Vector3 fromPosition, Vector3 toPosition, float duration)
+	public void Initialize(Transform root,Transform axis, Vector3 fromPosition, Vector3 toPosition, float duration)
     {
-        this.axis = axis;
+		this.axis.SetSceneTransform(axis);
         this.fromPosition = fromPosition;
 
 
         this.toPosition = toPosition;
         this.duration = duration;
-        this.setPosition();
+		this.setPosition(root);
     }
 
     public bool startFromTo()
@@ -106,7 +110,7 @@ public class Mover : Motor
         return this.currentState == Mover.State.STOPPED && this.currentPosition >= 1f;
     }
 
-    public void tick(float dt)
+	public void tick(float dt,Transform root)
     {
         this.currentPosition += dt * 1f / this.duration;
         if (this.currentPosition >= 1f)
@@ -114,10 +118,10 @@ public class Mover : Motor
             this.currentPosition = 1f;
             this.currentState = Mover.State.STOPPED;
         }
-        this.setPosition();
+		this.setPosition(root);
     }
 
-    private void setPosition()
+	private void setPosition(Transform root)
     {
         Vector3 a;
         Vector3 b;
@@ -131,6 +135,13 @@ public class Mover : Motor
             a = this.toPosition;
             b = this.fromPosition;
         }
-        this.axis.localPosition = Vector3.Lerp(a, b, Mathfx.Hermite(0f, 1f, this.currentPosition));
+		Transform transform = this.axis.FindSceneRefrence (root);
+		if(transform != null)
+			transform.localPosition = Vector3.Lerp(a, b, Mathfx.Hermite(0f, 1f, this.currentPosition));
     }
+
+	public virtual void Export(Transform refrence)
+	{
+		
+	}
 }

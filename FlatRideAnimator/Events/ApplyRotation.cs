@@ -20,14 +20,14 @@ public class ApplyRotation : RideAnimationEvent
         }
     }
     
-	public override void RenderInspectorGUI(AnimatorDecorator animator)
+	public override void RenderInspectorGUI(Motor[] motors)
     {
 
         if (rotator)
         {
             ColorIdentifier = rotator.ColorIdentifier;
         }
-		foreach (MultipleRotations R in animator.Motors.OfType<MultipleRotations>().ToList())
+		foreach (MultipleRotations R in motors.OfType<MultipleRotations>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -38,14 +38,14 @@ public class ApplyRotation : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-		base.RenderInspectorGUI(animator);
+		base.RenderInspectorGUI(motors);
     }
 
     public override void Enter()
     {
         
     }
-    public override void Run()
+	public override void Run(Transform root)
     {
         if (rotator)
         {
@@ -54,7 +54,7 @@ public class ApplyRotation : RideAnimationEvent
             rotator.tick(Time.realtimeSinceStartup - lastTime);
             lastTime = Time.realtimeSinceStartup;
             done = true;
-            base.Run();
+			base.Run(root);
         }
 
     }

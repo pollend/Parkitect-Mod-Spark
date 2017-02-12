@@ -17,13 +17,13 @@ public class StartRotator : RideAnimationEvent
             return "StartRotator";
         }
     }
-	public override void RenderInspectorGUI(AnimatorDecorator animator)
+	public override void RenderInspectorGUI(Motor[] motors)
     {
         if (rotator)
         {
             ColorIdentifier = rotator.ColorIdentifier;
         }
-		foreach (Rotator R in animator.Motors.OfType<Rotator>().ToList())
+		foreach (Rotator R in motors.OfType<Rotator>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red / 1.3f;
@@ -33,7 +33,7 @@ public class StartRotator : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-		base.RenderInspectorGUI(animator);
+		base.RenderInspectorGUI(motors);
     }
 
     public override void Enter()
@@ -43,7 +43,7 @@ public class StartRotator : RideAnimationEvent
         rotator.start();
         base.Enter();
     }
-    public override void Run()
+	public override void Run(Transform root)
     {
         if (rotator)
         {
@@ -54,7 +54,7 @@ public class StartRotator : RideAnimationEvent
             {
                 done = true;
             }
-            base.Run();
+			base.Run(root);
         }
         
     }

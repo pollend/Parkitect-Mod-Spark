@@ -18,13 +18,13 @@ public class FromToRot : RideAnimationEvent
             return "From-To Rot";
         }
     }
-	public override void RenderInspectorGUI(AnimatorDecorator animator)
+	public override void RenderInspectorGUI(Motor[] motors)
     {
         if (rotator)
         {
             ColorIdentifier = rotator.ColorIdentifier;
         }
-		foreach (RotateBetween R in animator.Motors.OfType<RotateBetween>().ToList())
+		foreach (RotateBetween R in motors.OfType<RotateBetween>().ToList())
         {
             if (R == rotator)
                 GUI.color = Color.red;
@@ -34,7 +34,7 @@ public class FromToRot : RideAnimationEvent
             }
             GUI.color = Color.white;
         }
-		base.RenderInspectorGUI(animator);
+		base.RenderInspectorGUI(motors);
     }
 
     public override void Enter()
@@ -44,20 +44,18 @@ public class FromToRot : RideAnimationEvent
         rotator.startFromTo();
         base.Enter();
     }
-    public override void Run()
+	public override void Run(Transform root)
     {
 
         if (rotator)
         {
-            
-            
             rotator.tick(Time.realtimeSinceStartup - lastTime);
             lastTime = Time.realtimeSinceStartup;
             if (rotator.isStopped())
             {
                 done = true;
             }
-            base.Run();
+			base.Run(root);
         }
         
     }

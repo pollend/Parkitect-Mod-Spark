@@ -42,38 +42,60 @@ public class AnimatorDecorator : Decorator
 
 	public void AddPhase(Phase phase)
 	{
+		AssetDatabase.AddObjectToAsset (phase,this);
+		EditorUtility.SetDirty(this);
+		AssetDatabase.SaveAssets();
+
 		this.phases.Add (phase);
 	}
 
-	public void RemovePhse(Phase phase)
+	public void RemovePhase(Phase phase)
 	{
 		this.phases.Remove (phase);
+		DestroyImmediate (phase, true);
 	}
 
+	public override void CleanUp (ParkitectObj parkitectObj)
+	{
+		for (int x = 0; x < phases.Count; x++) {
+			if (phases [x] != null) {
+				phases [x].CleanUp ();
+				DestroyImmediate (phases [x], true);
+			}
+		}
+		for (int x = 0; x < motors.Count; x++) {
+			if (motors [x] != null) {
+				DestroyImmediate (motors [x], true);
+			}
+		}
+		motors.Clear ();
+		phases.Clear ();
 
-
-	public void Animate()
+		base.CleanUp (parkitectObj);
+	}
+		
+	public void Animate(Transform root)
 	{
 		foreach (Motor m in motors)
 		{
-			m.Enter();
+			m.Enter(root);
 		}
 		if (phases.Count <= 0)
 		{
 			animating = false;
 			foreach (Motor m in motors)
 			{
-				m.Reset();
+				m.Reset(root);
 			}
 			foreach (MultipleRotations R in motors.OfType<MultipleRotations>())
 			{
-				R.Reset();
+				R.Reset(root);
 			}
 			return;
 		}
 		foreach (Motor m in motors)
 		{
-			m.Enter();
+			m.Enter(root);
 		}
 
 		animating = true;
@@ -81,12 +103,12 @@ public class AnimatorDecorator : Decorator
 		currentPhase = phases[phaseNum];
 		currentPhase.running = true;
 		currentPhase.Enter();
-		currentPhase.Run();
+		currentPhase.Run(root);
 	}
 
 
 
-	void NextPhase()
+	void NextPhase(Transform root)
 	{
 
 		currentPhase.Exit();
@@ -97,13 +119,13 @@ public class AnimatorDecorator : Decorator
 			currentPhase = phases[phaseNum];
 			currentPhase.running = true;
 			currentPhase.Enter();
-			currentPhase.Run();
+			currentPhase.Run(root);
 			return;
 		}
 		animating = false;
 		foreach (Motor m in motors.OfType<Rotator>())
 		{
-			m.Enter();
+			m.Enter(root);
 
 		}
 		foreach (Rotator m in motors.OfType<Rotator>())
@@ -118,20 +140,22 @@ public class AnimatorDecorator : Decorator
 		}
 		foreach (Mover m in motors.OfType<Mover>())
 		{
-			m.axis.localPosition = m.originalRotationValue;
+			Transform transform =  m.axis.FindSceneRefrence (root);
+			if(transform != null)
+				transform.localPosition = m.originalRotationValue;
 
 		}
 
 		currentPhase = null;
 	}
-	public void Run()
+	public void Run(Transform transform)
 	{
 		if (currentPhase != null)
 		{
-			currentPhase.Run();
+			currentPhase.Run(transform);
 			if (!currentPhase.running)
 			{
-				NextPhase();
+				NextPhase(transform);
 			}
 		}
 	}

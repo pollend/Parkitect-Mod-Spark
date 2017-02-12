@@ -15,7 +15,7 @@ public class Wait : RideAnimationEvent
             return "Wait";
         }
     }
-	public override void RenderInspectorGUI(AnimatorDecorator animator)
+	public override void RenderInspectorGUI(Motor[] motors)
     {
        
         seconds = EditorGUILayout.FloatField("Seconds", seconds);
@@ -23,7 +23,7 @@ public class Wait : RideAnimationEvent
         {
             GUILayout.Label("Time" + (timeLimit - Time.realtimeSinceStartup));
         }
-		base.RenderInspectorGUI(animator);
+		base.RenderInspectorGUI(motors);
     }
 
     public override void Enter()
@@ -32,7 +32,7 @@ public class Wait : RideAnimationEvent
         timeLimit = Time.realtimeSinceStartup + seconds;
         base.Enter();
     }
-    public override void Run()
+	public override void Run(Transform root)
     {
         if (Time.realtimeSinceStartup > timeLimit)
         {
@@ -43,7 +43,7 @@ public class Wait : RideAnimationEvent
         {
 
         }
-        base.Run();
+		base.Run(root);
     }
 
 }
