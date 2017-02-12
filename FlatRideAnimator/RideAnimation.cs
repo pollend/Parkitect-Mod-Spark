@@ -73,12 +73,15 @@ public class RideAnimation
 		}
 		foreach (Rotator m in motors.OfType<Rotator>().ToList())
 		{
-			m.axis.localRotation = m.originalRotationValue;
+			
+			m.axis.FindSceneRefrence(root).localRotation = m.originalRotationValue;
 
 		}
 		foreach (RotateBetween m in motors.OfType<RotateBetween>().ToList())
 		{
-			m.axis.localRotation = m.originalRotationValue;
+			Transform transform = m.axis.FindSceneRefrence (root);
+			if(transform)
+				transform.localRotation = m.originalRotationValue;
 
 		}
 		foreach (Mover m in motors.OfType<Mover>().ToList())

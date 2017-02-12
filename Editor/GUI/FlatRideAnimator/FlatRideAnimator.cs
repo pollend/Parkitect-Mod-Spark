@@ -408,36 +408,40 @@ public class FlatRideAnimator : EditorWindow
 			foreach (Rotator R in animator.Motors.OfType<Rotator>().ToList())
             {
 
-                if (R && R.axis)
+				if (R)
                 {
-                    if (R.rotationAxis != Vector3.zero)
-                    {
-                        Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 1);
-                        Handles.CircleCap(0, R.axis.position, R.axis.rotation * Quaternion.LookRotation(R.rotationAxis), .3f);
-                        Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 0.1f);
-                        Handles.DrawSolidDisc(R.axis.position, R.axis.rotation * R.rotationAxis, .3f);
+					if (R.rotationAxis != Vector3.zero)
+					{
+						Transform transform =  R.axis.FindSceneRefrence (sceneTransform);
+						if (transform != null ) {
+							Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 1);
+							Handles.CircleCap(0,transform.position, transform.rotation * Quaternion.LookRotation(R.rotationAxis), .3f);
+							Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 0.1f);
+							Handles.DrawSolidDisc(transform.position, transform.rotation * R.rotationAxis, .3f);
+						}
+  
                     }
                 }
             }
 			foreach (RotateBetween R in animator.Motors.OfType<RotateBetween>().ToList())
             {
-
-                if (R && R.axis)
+                if (R)
                 {
+					Transform transform = R.axis.FindSceneRefrence (sceneTransform);
+					if (transform) {
 
-                    
-                    Color color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, .8f);
-                    float rayRange = 2.0f;
-                    Quaternion leftRayRotation = R.axis.localRotation;
-                    Quaternion rightRayRotation =  Quaternion.Euler(R.axis.localEulerAngles + R.rotationAxis);
-                    if (!isPlaying)
-                    {
-                        Vector3 leftRayDirection = leftRayRotation * R.axis.up;
-                        Vector3 rightRayDirection = rightRayRotation * R.axis.up;
-                        Debug.DrawRay(R.axis.position, leftRayDirection * rayRange, color);
-                        Debug.DrawRay(R.axis.position, rightRayDirection * rayRange, color);
+						Color color = new Color (R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, .8f);
+						float rayRange = 2.0f;
+						Quaternion leftRayRotation = transform.localRotation;
+						Quaternion rightRayRotation = Quaternion.Euler (transform.localEulerAngles + R.rotationAxis);
+						if (!isPlaying) {
+							Vector3 leftRayDirection = leftRayRotation * transform.up;
+							Vector3 rightRayDirection = rightRayRotation * transform.up;
+							Debug.DrawRay (transform.position, leftRayDirection * rayRange, color);
+							Debug.DrawRay (transform.position, rightRayDirection * rayRange, color);
                         
-                    }
+						}
+					}
                    
                 }
             }

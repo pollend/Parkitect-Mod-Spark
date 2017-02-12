@@ -33,6 +33,7 @@ public class RefrencedTransform
 	}
 
 
+
 	public Transform FindSceneRefrence(Transform root)
 	{
 		if (this.root != root || cachedSceneRefrence == null) {

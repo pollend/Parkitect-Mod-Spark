@@ -51,8 +51,6 @@ public class Mover : Motor
 	public override void DrawGUI(Transform root)
     {
 		Identifier = EditorGUILayout.TextField("Name ", Identifier);
-        
-
 		axis.SetSceneTransform((Transform)EditorGUILayout.ObjectField("axis", axis.FindSceneRefrence (root), typeof(Transform), true));
         toPosition = EditorGUILayout.Vector3Field("Move To", toPosition);
         duration = EditorGUILayout.FloatField("Time", duration);
@@ -74,8 +72,6 @@ public class Mover : Motor
     {
 		this.axis.SetSceneTransform(axis);
         this.fromPosition = fromPosition;
-
-
         this.toPosition = toPosition;
         this.duration = duration;
 		this.setPosition(root);

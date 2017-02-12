@@ -48,7 +48,7 @@ public class StartRotator : RideAnimationEvent
         if (rotator)
         {
             
-            rotator.tick(Time.realtimeSinceStartup - lastTime);
+			rotator.tick(Time.realtimeSinceStartup - lastTime,root);
             lastTime = Time.realtimeSinceStartup;
             if (rotator.reachedFullSpeed())
             {

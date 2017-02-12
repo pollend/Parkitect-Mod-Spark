@@ -8,19 +8,21 @@ using System;
 [Serializable]
 public class MultipleRotations : Motor {
     [SerializeField]
-    public Transform mainAxis;
+	public RefrencedTransform mainAxis = new RefrencedTransform();
     [SerializeField]
-    public List<Transform> Axiss = new List<Transform>();
+	public List<RefrencedTransform> Axiss = new List<RefrencedTransform>();
     
 	public override void DrawGUI(Transform root)
     {
 
         Identifier = EditorGUILayout.TextField("Name ", Identifier);
-        mainAxis = (Transform)EditorGUILayout.ObjectField("MainAxis", mainAxis, typeof(Transform), true);
+		mainAxis.SetSceneTransform((Transform)EditorGUILayout.ObjectField("MainAxis", mainAxis.FindSceneRefrence(root), typeof(Transform), true));
         Transform Axis = (Transform)EditorGUILayout.ObjectField("Add axis", null, typeof(Transform), true);
         if(Axis)
         {
-            Axiss.Add(Axis);
+			var refrenceTransform =  new RefrencedTransform ();
+			refrenceTransform.SetSceneTransform (Axis);
+			Axiss.Add(refrenceTransform);
         }
         if (Selection.objects.Length > 0)
         {
@@ -28,14 +30,16 @@ public class MultipleRotations : Motor {
             {
                 foreach (GameObject GObj in Selection.objects)
                 {
-                    Axiss.Add(GObj.transform);
+					var refrenceTransform =  new RefrencedTransform ();
+					refrenceTransform.SetSceneTransform (GObj.transform);
+					Axiss.Add(refrenceTransform);
                 }
 
             }
         }
-        foreach (Transform T in Axiss)
+		foreach (RefrencedTransform T in Axiss)
         {
-            if(GUILayout.Button(T.gameObject.name, "ShurikenModuleTitle"))
+			if(GUILayout.Button(T.FindSceneRefrence(root).gameObject.name, "ShurikenModuleTitle"))
             {
                 if (Event.current.button == 1)
                 {
@@ -44,8 +48,8 @@ public class MultipleRotations : Motor {
                 }
                 else
                 {
-                    Selection.objects = new GameObject[] { T.gameObject };
-                    EditorGUIUtility.PingObject(T.gameObject);
+					Selection.objects = new GameObject[] { T.FindSceneRefrence(root).gameObject};
+					EditorGUIUtility.PingObject(T.FindSceneRefrence(root).gameObject);
                 }
             }
         }
@@ -53,21 +57,23 @@ public class MultipleRotations : Motor {
     }
 	public override void Reset(Transform root)
     {
-        if (mainAxis)
+		Transform transform = mainAxis.FindSceneRefrence (root);
+		if (transform)
         {
-            foreach (Transform T in Axiss)
+			foreach (RefrencedTransform T in Axiss)
             {
-                T.localRotation = mainAxis.localRotation;
+				T.FindSceneRefrence(root).localRotation = transform.localRotation;
             }
         }
     }
-    public void tick(float dt)
+	public void tick(float dt,Transform root)
     {
-        if (mainAxis)
+		Transform transform = mainAxis.FindSceneRefrence (root);
+		if (transform)
         {
-            foreach (Transform T in Axiss)
+			foreach (RefrencedTransform T in Axiss)
             {
-                T.localRotation = mainAxis.localRotation;
+				T.FindSceneRefrence(root).localRotation = transform.localRotation;
             }
         }
     }

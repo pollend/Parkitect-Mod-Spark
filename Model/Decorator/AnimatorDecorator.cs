@@ -130,12 +130,16 @@ public class AnimatorDecorator : Decorator
 		}
 		foreach (Rotator m in motors.OfType<Rotator>())
 		{
-			m.axis.localRotation = m.originalRotationValue;
+			Transform transform = m.axis.FindSceneRefrence (root);
+			if(transform != null)
+				transform.localRotation = m.originalRotationValue;
 
 		}
 		foreach (RotateBetween m in motors.OfType<RotateBetween>())
 		{
-			m.axis.localRotation = m.originalRotationValue;
+			Transform transform = m.axis.FindSceneRefrence (root);
+			if(transform != null)
+				transform.localRotation = m.originalRotationValue;
 
 		}
 		foreach (Mover m in motors.OfType<Mover>())

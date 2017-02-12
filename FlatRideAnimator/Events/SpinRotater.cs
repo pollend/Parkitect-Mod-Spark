@@ -61,7 +61,7 @@ public class SpinRotater : RideAnimationEvent
         {
 
 
-            rotator.tick(Time.realtimeSinceStartup - lastTime);
+			rotator.tick(Time.realtimeSinceStartup - lastTime,root);
             lastTime = Time.realtimeSinceStartup;
             if (spin)
             {

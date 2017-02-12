@@ -51,7 +51,7 @@ public class ApplyRotation : RideAnimationEvent
         {
 
 
-            rotator.tick(Time.realtimeSinceStartup - lastTime);
+			rotator.tick(Time.realtimeSinceStartup - lastTime,root);
             lastTime = Time.realtimeSinceStartup;
             done = true;
 			base.Run(root);

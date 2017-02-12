@@ -47,7 +47,7 @@ public class StopRotator : RideAnimationEvent
     {
         if (rotator)
         {
-            rotator.tick(Time.realtimeSinceStartup - lastTime);
+			rotator.tick(Time.realtimeSinceStartup - lastTime,root);
             lastTime = Time.realtimeSinceStartup;
             if (rotator.isStopped())
             {
