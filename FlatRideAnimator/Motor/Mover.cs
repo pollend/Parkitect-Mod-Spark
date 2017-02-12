@@ -48,13 +48,13 @@ public class Mover : Motor
             return "Mover";
         }
     }
-	public override void DrawGUI(Transform root)
+	public override void InspectorGUI(Transform root)
     {
 		Identifier = EditorGUILayout.TextField("Name ", Identifier);
 		axis.SetSceneTransform((Transform)EditorGUILayout.ObjectField("axis", axis.FindSceneRefrence (root), typeof(Transform), true));
         toPosition = EditorGUILayout.Vector3Field("Move To", toPosition);
         duration = EditorGUILayout.FloatField("Time", duration);
-		base.DrawGUI(root);
+		base.InspectorGUI(root);
 
     }
 	public override void Enter(Transform root)

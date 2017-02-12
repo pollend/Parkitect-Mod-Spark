@@ -12,7 +12,7 @@ public class MultipleRotations : Motor {
     [SerializeField]
 	public List<RefrencedTransform> Axiss = new List<RefrencedTransform>();
     
-	public override void DrawGUI(Transform root)
+	public override void InspectorGUI(Transform root)
     {
 
         Identifier = EditorGUILayout.TextField("Name ", Identifier);
@@ -53,7 +53,7 @@ public class MultipleRotations : Motor {
                 }
             }
         }
-		base.DrawGUI(root);
+		base.InspectorGUI(root);
     }
 	public override void Reset(Transform root)
     {

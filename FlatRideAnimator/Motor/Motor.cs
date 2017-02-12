@@ -13,7 +13,7 @@ public class Motor : ScriptableObject
 	{
 		ColorIdentifier = new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f));
 	}
-	public virtual void DrawGUI(Transform root)
+	public virtual void InspectorGUI(Transform root)
 	{
 		ColorIdentifier = EditorGUILayout.ColorField("Color ", ColorIdentifier);
 	}

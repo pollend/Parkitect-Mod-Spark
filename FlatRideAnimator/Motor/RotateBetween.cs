@@ -30,14 +30,14 @@ public class RotateBetween : Motor
             return "RotateBetween";
         }
     }
-	public override void DrawGUI(Transform root)
+	public override void InspectorGUI(Transform root)
     {
 
         Identifier = EditorGUILayout.TextField("Name ", Identifier);
 		axis.SetSceneTransform((Transform)EditorGUILayout.ObjectField("axis", axis.FindSceneRefrence(root), typeof(Transform), true));
         rotationAxis = EditorGUILayout.Vector3Field("Rotate To", rotationAxis);
         duration = EditorGUILayout.FloatField("Time", duration);
-		base.DrawGUI(root);
+		base.InspectorGUI(root);
     }
 	public override void Reset(Transform root)
     {

@@ -61,7 +61,7 @@ public class Rotator : Motor
             return "Rotator";
         }
     }
-	public override void DrawGUI(Transform root)
+	public override void InspectorGUI(Transform root)
     {
 
         Identifier = EditorGUILayout.TextField("Name ", Identifier);
@@ -69,7 +69,7 @@ public class Rotator : Motor
         maxSpeed = EditorGUILayout.FloatField("maxSpeed", maxSpeed);
         accelerationSpeed = EditorGUILayout.FloatField("accelerationSpeed", accelerationSpeed);
         rotationAxis = EditorGUILayout.Vector3Field("rotationAxis", rotationAxis);
-		base.DrawGUI(root);
+		base.InspectorGUI(root);
     }
 	public override void Enter(Transform root)
     {

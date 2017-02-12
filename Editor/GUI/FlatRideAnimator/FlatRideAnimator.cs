@@ -187,7 +187,7 @@ public class FlatRideAnimator : EditorWindow
                 GUI.color = Color.white;
 
                 if (m.showSettings)
-					m.DrawGUI(sceneTransform);
+					m.InspectorGUI(sceneTransform);
                 EditorGUILayout.EndVertical();
             }
             GUILayout.FlexibleSpace();
@@ -340,6 +340,9 @@ public class FlatRideAnimator : EditorWindow
         {
 			R.Reset(root);
         }
+		foreach (Phase phase in animator.Phases) {
+			phase.Exit ();
+		}
     }
 	void DrawToolStripEvents(AnimatorDecorator animator,Transform root)
     {
@@ -362,9 +365,7 @@ public class FlatRideAnimator : EditorWindow
 				ResetMotors(animator,root);
 				animator.currentPhase = null;
             }
-			isPlaying = animator.animating;
-            
-            
+			isPlaying = animator.animating;   
         }
         if (GUILayout.Button(button, EditorStyles.toolbarButton))
         {
@@ -414,6 +415,7 @@ public class FlatRideAnimator : EditorWindow
 					{
 						Transform transform =  R.axis.FindSceneRefrence (sceneTransform);
 						if (transform != null ) {
+							
 							Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 1);
 							Handles.CircleCap(0,transform.position, transform.rotation * Quaternion.LookRotation(R.rotationAxis), .3f);
 							Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 0.1f);
