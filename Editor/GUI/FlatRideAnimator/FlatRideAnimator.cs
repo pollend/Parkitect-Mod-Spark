@@ -11,7 +11,7 @@ public class FlatRideAnimator : EditorWindow
     Vector2 scrollPosMotors;
     bool isPlaying;
     //For Adding events
-    private Phase curentPhase;
+    private SPPhase curentPhase;
 
     List<ReflectionProbe> ReflectionProbes = new List<ReflectionProbe>();
     // Add menu named "My Window" to the Window menu
@@ -58,61 +58,61 @@ public class FlatRideAnimator : EditorWindow
         switch (obj.ToString())
         {
             case "Wait":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance< Wait>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPWait>());
                 break;
             case "StartRotator":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance< StartRotator>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPStartRotator>());
                 break;
             case "SpinRotator":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance<SpinRotater>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPSpinRotater>());
                 break;
             case "StopRotator":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance< StopRotator>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPStopRotator>());
                 break;
             case "From-ToRot":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance<FromToRot>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPFromToRot>());
                 break;
             case "To-FromRot":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance<ToFromRot>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPToFromRot>());
                 break;
             case "From-ToMove":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance<FromToMove>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPFromToMove>());
                 break;
             case "To-FromMove":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance<ToFromMove>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPToFromMove>());
                 break;
             case "ApplyRotations":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance<ApplyRotation>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPApplyRotation>());
                 break;
             case "ChangePendulum":
-				curentPhase.AddEvent(ScriptableObject.CreateInstance<ChangePendulum>());
+			curentPhase.AddEvent(ScriptableObject.CreateInstance<SPChangePendulum>());
                 break;
 			case "Rotator":
-				Rotator R = CreateInstance<Rotator> ();
+				SPRotator R = CreateInstance<SPRotator> ();
 				animator.AddMotor (R);
 				R.Identifier = "Rotator_" + animator.Motors.Count();
 
                 break;
             case "PendulumRotator":
-                PendulumRotator PR = CreateInstance<PendulumRotator>();
+				SPPendulumRotator PR = CreateInstance<SPPendulumRotator>();
 				animator.AddMotor (PR);    
 				PR.Identifier = "PendulumRotator_" + animator.Motors.Count();
 
                 break;
             case "RotateBetween":
-                RotateBetween RB = CreateInstance<RotateBetween>();
+				SPRotateBetween RB = CreateInstance<SPRotateBetween>();
 				animator.AddMotor (RB);     
 				RB.Identifier = "RotateBetween_" + animator.Motors.Count();
 
                 break;
             case "Mover":
-                Mover M = CreateInstance<Mover>();
+				SPMover M = CreateInstance<SPMover>();
 				animator.AddMotor (M);  
 				M.Identifier = "Mover_" + animator.Motors.Count();
 
                 break;
             case "MultiplyRotations":
-                MultipleRotations MR = CreateInstance<MultipleRotations>();
+				SPMultipleRotations MR = CreateInstance<SPMultipleRotations>();
 				animator.AddMotor (MR);    
 				MR.Identifier = "MultiplyRotations_" + animator.Motors.Count();
 
@@ -142,15 +142,15 @@ public class FlatRideAnimator : EditorWindow
 
 			EditorUtility.SetDirty(animator);
 
-			foreach(Phase p in animator.Phases)
+			foreach(SPPhase p in animator.Phases)
             {
-                foreach (RideAnimationEvent RAE in p.Events)
+				foreach (SPRideAnimationEvent RAE in p.Events)
                 {
                     EditorUtility.SetDirty(RAE);
                 }
 
             }
-			foreach(Motor m in animator.Motors)
+			foreach(SPMotor m in animator.Motors)
                 EditorUtility.SetDirty(m);
             Event e = Event.current;
      
@@ -163,7 +163,7 @@ public class FlatRideAnimator : EditorWindow
 			DrawToolStripEvents(animator,sceneTransform);
             GUILayout.EndHorizontal();
             scrollPosMotors = EditorGUILayout.BeginScrollView(scrollPosMotors, "grey_border");
-			foreach (Motor m in animator.Motors)
+			foreach (SPMotor m in animator.Motors)
             {
 
                
@@ -209,7 +209,7 @@ public class FlatRideAnimator : EditorWindow
             {
                 // Now create the menu, add items and show it
                 
-				animator.AddPhase (new Phase ());//.Add(new Phase());
+				animator.AddPhase (new SPPhase ());//.Add(new Phase());
             }
             EditorGUILayout.EndVertical();
             scrollPosPhases = EditorGUILayout.BeginScrollView(scrollPosPhases, "grey_border", GUILayout.ExpandWidth(true));
@@ -244,7 +244,7 @@ public class FlatRideAnimator : EditorWindow
                         menu.ShowAsContext();
                         e.Use();
                     }
-					foreach (RideAnimationEvent RAE in animator.Phases[i].Events)
+					foreach (SPRideAnimationEvent RAE in animator.Phases[i].Events)
                     {
 
                         EditorGUILayout.BeginVertical("ShurikenEffectBg");
@@ -332,15 +332,15 @@ public class FlatRideAnimator : EditorWindow
     }
 	void ResetMotors(AnimatorDecorator animator,Transform root)
     {
-		foreach (Motor m in animator.Motors)
+		foreach (SPMotor m in animator.Motors)
         {
 			m.Reset(root);
         }
-		foreach(MultipleRotations R in animator.Motors.OfType<MultipleRotations>())
+		foreach(SPMultipleRotations R in animator.Motors.OfType<SPMultipleRotations>())
         {
 			R.Reset(root);
         }
-		foreach (Phase phase in animator.Phases) {
+		foreach (SPPhase phase in animator.Phases) {
 			phase.Exit ();
 		}
     }
@@ -406,7 +406,7 @@ public class FlatRideAnimator : EditorWindow
        // if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
         {
             
-			foreach (Rotator R in animator.Motors.OfType<Rotator>().ToList())
+			foreach (SPRotator R in animator.Motors.OfType<SPRotator>().ToList())
             {
 
 				if (R)
@@ -425,7 +425,7 @@ public class FlatRideAnimator : EditorWindow
                     }
                 }
             }
-			foreach (RotateBetween R in animator.Motors.OfType<RotateBetween>().ToList())
+			foreach (SPRotateBetween R in animator.Motors.OfType<SPRotateBetween>().ToList())
             {
                 if (R)
                 {
@@ -447,7 +447,7 @@ public class FlatRideAnimator : EditorWindow
                    
                 }
             }
-			foreach (Mover R in animator.Motors.OfType<Mover>().ToList())
+			foreach (SPMover R in animator.Motors.OfType<SPMover>().ToList())
             {
 				if (R != null)
                 {

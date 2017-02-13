@@ -17,7 +17,7 @@ public class ModWindow : EditorWindow
 	{
 		NONE, CONNECT
 	}
-	public Waypoint selectedWaypoint;
+	public SPWaypoint selectedWaypoint;
 
 	Vector2 scrollPos = new Vector2();
 
@@ -91,7 +91,7 @@ public class ModWindow : EditorWindow
 		GUILayout.Label(logo, centeredStyle, GUILayout.MaxWidth(Screen.width), GUILayout.ExpandHeight(false));
 		//Show Mod name
 		GUILayout.BeginHorizontal("flow background");
-		GUILayout.Label(ModPayload.Instance.name, "LODLevelNotifyText");
+		GUILayout.Label(ModPayload.Instance.modName, "LODLevelNotifyText");
 		GUILayout.EndHorizontal();
 
 		Event e = Event.current;
@@ -107,7 +107,7 @@ public class ModWindow : EditorWindow
 		parkitectObjTypeSelection.Render (modObjectsView);
 		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null) {
 			GUILayout.BeginHorizontal("flow background");
-			GUILayout.Label(modObjectsView.selectedParkitectObject.Prefab.name, "LODLevelNotifyText");
+			GUILayout.Label(modObjectsView.selectedParkitectObject.objectName, "LODLevelNotifyText");
 			GUILayout.EndHorizontal();
 
 			GUILayout.Label(modObjectsView.selectedParkitectObject.key);

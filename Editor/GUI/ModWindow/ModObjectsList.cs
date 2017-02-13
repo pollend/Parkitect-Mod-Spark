@@ -120,7 +120,7 @@ public class ModObjectsList
 			else
 			{
 
-				if (GUILayout.Button(PO.name, "minibutton"))
+				if (GUILayout.Button(PO.objectName, "minibutton"))
 				{
 					if (e.button == 1)
 					{
