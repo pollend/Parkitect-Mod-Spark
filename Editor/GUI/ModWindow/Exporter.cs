@@ -20,7 +20,8 @@ public class Exporter
 		}
 
 		AssetBundleBuild bundle = new AssetBundleBuild ();
-		bundle.assetBundleName = "mod";
+		bundle.assetBundleName = "assetbundle";
+
 
 		List<string> paths = new List<string> ();
 		payload.GetAssetbundlePaths(paths);
