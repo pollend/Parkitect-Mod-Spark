@@ -1,0 +1,3 @@
+[submodule "Parkitect_Mod_Bootstrap"]
+	path = Parkitect_Mod_Bootstrap
+	url = https://github.com/pollend/Parkitect_Mod_Bootstrap.git
