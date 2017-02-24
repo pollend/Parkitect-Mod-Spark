@@ -211,14 +211,6 @@ public class ModObjectsList
 			float currentX = 0;
 			this.AddParkitectObject (deco);
 			selectedParkitectObject = deco;
-			//modManager.ParkitectObjects.Add(PO);
-			//modManager.asset = PO;
-			foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs) {
-				PObj.Prefab.transform.position = new Vector3 (currentX, 0, 0);
-				currentX += PObj.XSize / 2;
-			}
-
-
 
 		}
 		GUILayout.EndHorizontal();
@@ -256,16 +248,9 @@ public class ModObjectsList
 					}
 					DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> ();
 					deco.SetGameObject(GObj);
-					float currentX = 0;
 					AddParkitectObject (deco);
 					this.selectedParkitectObject = deco;
-					//modManager.ParkitectObjects.Add(PO);
-					//modManager.asset = PO;
-					foreach (ParkitectObj PObj in ModPayload.Instance.ParkitectObjs)// modManager.ParkitectObjects)
-					{
-						PObj.Prefab.transform.position = new Vector3(currentX, 0, 0);
-						currentX += PObj.XSize / 2;
-					}
+	
 				}
 
 			}
@@ -286,10 +271,6 @@ public class ModObjectsList
 				if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this item? Name: " +  this.selectedParkitectObject.name, "Ok", "Cancel"))
 				{
 					RemoveParkitectObject (this.selectedParkitectObject);
-					//RemoveParkitectObject (selectedObjects);
-					//modObjectPresenter.RemoveParkitectObject (modObjectPresenter.SelectedParkitectObject);
-					//modManager.ParkitectObjects.Remove(modManager.asset);
-					//modManager.asset = null;
 				}
 			}
 		}

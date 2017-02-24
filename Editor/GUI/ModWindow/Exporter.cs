@@ -34,9 +34,6 @@ public class Exporter
 		var mod = new XElement ("Mod", ModPayload.Instance.Serialize ());
 		mod.Save (path + "/mod.xml");
 
-
-
-		
 	}
 }
 
