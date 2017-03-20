@@ -23,9 +23,9 @@ public class SparksBootstrap
 	public void Load(String path){
 		XElement element =  XElement.Load (path);
 		foreach (var ele in element.Element("Mod").Elements()) {
-			ParkitectObj parkitectObject = Utility.GetByTypeName<ParkitectObj> (ele.Name);
-			parkitectObject.DeSerialize (ele);
-			parkitectObject.BindToParkitect ();
+			//ParkitectObj parkitectObject = Utility.GetByTypeName<ParkitectObj> (ele.Name);
+		//	parkitectObject.DeSerialize (ele);
+	//		parkitectObject.BindToParkitect ();
 		}
 
 	}

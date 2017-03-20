@@ -107,7 +107,7 @@ public class ModWindow : EditorWindow
 		parkitectObjTypeSelection.Render (modObjectsView);
 		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null) {
 			GUILayout.BeginHorizontal("flow background");
-			GUILayout.Label(modObjectsView.selectedParkitectObject.objectName, "LODLevelNotifyText");
+			GUILayout.Label(modObjectsView.selectedParkitectObject.Prefab.name, "LODLevelNotifyText");
 			GUILayout.EndHorizontal();
 
 			GUILayout.Label(modObjectsView.selectedParkitectObject.key);
