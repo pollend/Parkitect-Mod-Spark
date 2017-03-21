@@ -61,6 +61,17 @@ public class Exporter
 
 			foreach (string newPath in Directory.GetFiles(sourcePath, "*.*",SearchOption.AllDirectories))
 				File.Copy(newPath,modPath + "/data/" + Path.GetFileName(newPath), true);
+
+			if(!File.Exists(modPath+ "/.gitignore"))
+				File.WriteAllText (modPath+ "/.gitignore",PackagedFiles.GIT_IGNORE);
+			if(!File.Exists(modPath+ "/" + payload.modName + ".sln"))
+				File.WriteAllText (modPath+ "/" + payload.modName + ".sln",PackagedFiles.SLN.Replace("%1",payload.modName).Replace("%2",payload.modName));
+			if(!File.Exists(modPath+ "/"  + payload.modName + ".csproj"))
+				File.WriteAllText (modPath+ "/"  + payload.modName + ".csproj",PackagedFiles.CSPROJ.Replace("%1",payload.modName).Replace("%2",payload.modName));
+
+			File.WriteAllText (modPath+ "/Main.cs",PackagedFiles.MAIN.Replace("%1",payload.modName).Replace("%2",payload.description));
+			File.WriteAllText (modPath+ "/mod.json",PackagedFiles.MOD_JSON.Replace("%1",payload.modName).Replace("%2",payload.modName));
+
 			
 		}
 
