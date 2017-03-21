@@ -1,0 +1,9 @@
+﻿{
+"BaseDir":"",
+"CompilerVersion":"v3.5",
+"IsDevelopment":true,
+"IsEnabled":true,
+"Name":"%1",
+"Project":"%2",
+"Dependencies":["pollend/Parkitect_Mod_Bootstrap"]
+}
