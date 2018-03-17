@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 
 public class ModObjectsList
@@ -19,15 +20,15 @@ public class ModObjectsList
 	{
 	}
 
-	public void switchParkitectObject(ParkitectObj orignal, ParkitectObj replace)
+	public void SwitchParkitectObject(ParkitectObj orignal, ParkitectObj replace)
 	{
 		if (ModPayload.Instance.ParkitectObjs.Contains (orignal)) {
 			ModPayload.Instance.ParkitectObjs.Remove (orignal);
 
 			UnityEngine.Object.DestroyImmediate (orignal, true);
 			AssetDatabase.SaveAssets ();
-			if(!EditorSceneManager.GetActiveScene().isDirty)
-				EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
+			if(!SceneManager.GetActiveScene().isDirty)
+				EditorSceneManager.MarkSceneDirty (SceneManager.GetActiveScene());
 		
 		}
 		this.AddParkitectObject (replace);
@@ -47,8 +48,8 @@ public class ModObjectsList
 		UnityEngine.Object.DestroyImmediate (obj, true);
         obj.CleanUp ();
 		AssetDatabase.SaveAssets ();
-		if(!EditorSceneManager.GetActiveScene().isDirty)
-			EditorSceneManager.MarkSceneDirty (EditorSceneManager.GetActiveScene());
+		if(!SceneManager.GetActiveScene().isDirty)
+			EditorSceneManager.MarkSceneDirty (SceneManager.GetActiveScene());
 		
 
 		return ModPayload.Instance.ParkitectObjs.Remove (obj);
@@ -205,32 +206,27 @@ public class ModObjectsList
 
 				}
 			}
-			DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> (); //new ParkitectObj(new Decorator[]{});
-			deco.SetGameObject (GO);
+			DecoParkitectObject decoParkitectObject = ScriptableObject.CreateInstance<DecoParkitectObject> (); //new ParkitectObj(new Decorator[]{});
+			decoParkitectObject.SetGameObject (GO);
 
 			float currentX = 0;
-			this.AddParkitectObject (deco);
-			selectedParkitectObject = deco;
+			AddParkitectObject (decoParkitectObject);
+			selectedParkitectObject = decoParkitectObject;
 
 		}
 		GUILayout.EndHorizontal();
-
-		//if (modWindow.enableEditing)
-		//{
-		//	GUI.color = Color.grey;
-		//}
-
 		GUILayout.Space(5);
 
 		if (selectedObjects.Length > 0)
 		{
 			if (GUILayout.Button("Add selection"))
 			{
-				foreach (GameObject GObj in Selection.objects)
+				foreach (var o in Selection.objects)
 				{
+					var gObj = (GameObject) o;
 					foreach (ParkitectObj po in ModPayload.Instance.ParkitectObjs)
 					{
-						if (po.Prefab == GObj) {
+						if (po.Prefab == gObj) {
 							UnityEngine.Debug.LogWarning ("Object already in list");
 							EditorGUIUtility.PingObject (po.Prefab);
 							return;
@@ -238,7 +234,7 @@ public class ModObjectsList
 							UnityEngine.Debug.LogWarning ("Object not in scene");
 							EditorGUIUtility.PingObject (po.Prefab);
 							return;
-						} else if (GObj.name == po.Prefab.name) {
+						} else if (gObj.name == po.Prefab.name) {
 							UnityEngine.Debug.LogWarning ("Object found with the same name");
 							EditorGUIUtility.PingObject (po.Prefab);
 							return;
@@ -246,10 +242,10 @@ public class ModObjectsList
 
 
 					}
-					DecoParkitectObject deco = ScriptableObject.CreateInstance<DecoParkitectObject> ();
-					deco.SetGameObject(GObj);
-					AddParkitectObject (deco);
-					this.selectedParkitectObject = deco;
+					DecoParkitectObject emptyParkitectObject = ScriptableObject.CreateInstance<DecoParkitectObject> ();
+					emptyParkitectObject.SetGameObject(gObj);
+					AddParkitectObject (emptyParkitectObject);
+					this.selectedParkitectObject = emptyParkitectObject;
 	
 				}
 

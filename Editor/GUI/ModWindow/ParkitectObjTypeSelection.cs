@@ -52,7 +52,7 @@ public class ParkitectObjTypeSelection
 		
 					ParkitectObj pkObj= (ParkitectObj)ScriptableObject.CreateInstance (parkitectObjs [selection]);
 					pkObj.Load (modObjectList.selectedParkitectObject);
-					modObjectList.switchParkitectObject (modObjectList.selectedParkitectObject, pkObj);
+					modObjectList.SwitchParkitectObject (modObjectList.selectedParkitectObject, pkObj);
 				}
 				GUILayout.EndHorizontal ();
 			

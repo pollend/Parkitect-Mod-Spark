@@ -13,21 +13,24 @@ public class ModWindow : EditorWindow
 	public GUISkin guiSkin;
 	private bool enableEditing = false;
 	Texture2D logo;
+
 	private enum State
 	{
-		NONE, CONNECT
+		NONE,
+		CONNECT
 	}
+
 	public SPWaypoint selectedWaypoint;
 
 	Vector2 scrollPos = new Vector2();
 
 	ModConfigurationView modConfigurationView = new ModConfigurationView();
-	ModObjectsList  modObjectsView = new ModObjectsList();
+	ModObjectsList modObjectsView = new ModObjectsList();
 	ParkitectObjTypeSelection parkitectObjTypeSelection = new ParkitectObjTypeSelection();
 
 	public void repaintWindow()
 	{
-		
+
 		Repaint();
 	}
 
@@ -48,17 +51,20 @@ public class ModWindow : EditorWindow
 	static void Init()
 	{
 		// Get existing open window or if none, make a new one:
-		ModWindow window = (ModWindow)EditorWindow.GetWindow(typeof(ModWindow));
+		ModWindow window = (ModWindow) EditorWindow.GetWindow(typeof(ModWindow));
 		window.Show();
 		window.titleContent.text = "Parkitect Mod";
 	}
+
 	void OnEnable()
 	{
-		logo = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Parkitect_ModSpark/Textures/MSlogo.png", typeof(Texture2D));
-		titleContent.image = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Parkitect_ModSpark/Textures/icon.png", typeof(Texture2D));
+		logo = (Texture2D) AssetDatabase.LoadAssetAtPath("Assets/Parkitect_ModSpark/Textures/MSlogo.png", typeof(Texture2D));
+		titleContent.image =
+			(Texture2D) AssetDatabase.LoadAssetAtPath("Assets/Parkitect_ModSpark/Textures/icon.png", typeof(Texture2D));
 		//guiSkin = (GUISkin)(AssetDatabase.LoadAssetAtPath("Assets/Parkitect_ModSpark/Editor/GUI/GUISkin_Spark.guiskin", typeof(GUISkin)));
 		//UpdateInfo.Check(false);
 	}
+
 	void OnSelectionChange()
 	{
 		Repaint();
@@ -67,22 +73,13 @@ public class ModWindow : EditorWindow
 
 	void OnGUI()
 	{
-		
+
 		if (enableEditing)
 		{
 			GUI.color = Color.grey;
-		}     
-		//Show Update 
-		if (UpdateInfo.CurNewVersion > UpdateInfo.CurVerion)
-		{
-			GUI.color = Color.red / 1.4f;
-			GUILayout.BeginHorizontal("IN BigTitle");
-			GUI.color = Color.white;
-			GUILayout.Label("Version " + UpdateInfo.CurNewVersion + " is out! You have version " + UpdateInfo.CurVerion);
-			GUILayout.FlexibleSpace();
-			if (GUILayout.Button("Update")) { Application.OpenURL(UpdateInfo.NewSite);}
-			GUILayout.EndHorizontal();
 		}
+
+		//Show Update 
 		scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
 		//Show logo
@@ -95,38 +92,43 @@ public class ModWindow : EditorWindow
 		GUILayout.EndHorizontal();
 
 		Event e = Event.current;
-		modConfigurationView.Render ();
-		modObjectsView.Render (Selection.objects);
+		modConfigurationView.Render();
+		modObjectsView.Render(Selection.objects);
 
-	
+
 		if (enableEditing)
 		{
 			GUI.color = Color.grey;
 		}
 
-		parkitectObjTypeSelection.Render (modObjectsView);
-		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null) {
+		parkitectObjTypeSelection.Render(modObjectsView);
+		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null)
+		{
 			GUILayout.BeginHorizontal("flow background");
 			GUILayout.Label(modObjectsView.selectedParkitectObject.Prefab.name, "LODLevelNotifyText");
 			GUILayout.EndHorizontal();
 
 			GUILayout.Label(modObjectsView.selectedParkitectObject.key);
-			if (GUILayout.Button ("Update Prefab")) {
-				modObjectsView.selectedParkitectObject.UpdatePrefab ();
+			if (GUILayout.Button("Update Prefab"))
+			{
+				modObjectsView.selectedParkitectObject.UpdatePrefab();
 			}
 
-			if (GUILayout.Button ("Create Instance In Scene")) {
-				modObjectsView.selectedParkitectObject.getGameObjectRef (true);
-				modObjectsView.selectedParkitectObject.UpdatePrefab ();
+			if (GUILayout.Button("Create Instance In Scene"))
+			{
+				modObjectsView.selectedParkitectObject.getGameObjectRef(true);
+				modObjectsView.selectedParkitectObject.UpdatePrefab();
 			}
 
-			Type[] types =  modObjectsView.selectedParkitectObject.SupportedDecorators ();
-			for (int x = 0; x < types.Length; x++) {
-				var decorator = modObjectsView.selectedParkitectObject.GetDecorator (types [x],true);
-				if(decorator != null)
-					decorator.RenderInspectorGUI (modObjectsView.selectedParkitectObject);
+			Type[] types = modObjectsView.selectedParkitectObject.SupportedDecorators();
+			for (int x = 0; x < types.Length; x++)
+			{
+				var decorator = modObjectsView.selectedParkitectObject.GetDecorator(types[x], true);
+				if (decorator != null)
+					decorator.RenderInspectorGUI(modObjectsView.selectedParkitectObject);
 			}
 		}
+
 		EditorUtility.SetDirty(ModPayload.Instance);
 		GUILayout.Space(50);
 		EditorGUILayout.EndScrollView();
@@ -139,13 +141,15 @@ public class ModWindow : EditorWindow
 
 	void OnFocus()
 	{
-		
+
+
 		// Remove delegate listener if it has previously
 		// been assigned.
 		SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
 		// Add (or re-add) the delegate.
 		SceneView.onSceneGUIDelegate += this.OnSceneGUI;
 	}
+
 	void OnDestroy()
 	{
 		// When the window is destroyed, remove the delegate
@@ -158,12 +162,14 @@ public class ModWindow : EditorWindow
 	void OnSceneGUI(SceneView sceneView)
 	{
 
-		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null) {
-			Type[] types =  modObjectsView.selectedParkitectObject.SupportedDecorators ();
-			for (int x = 0; x < types.Length; x++) {
-				var decorator = modObjectsView.selectedParkitectObject.GetDecorator (types [x],true);
-				if(decorator != null)
-					decorator.RenderSceneGUI (modObjectsView.selectedParkitectObject);
+		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null)
+		{
+			Type[] types = modObjectsView.selectedParkitectObject.SupportedDecorators();
+			for (int x = 0; x < types.Length; x++)
+			{
+				var decorator = modObjectsView.selectedParkitectObject.GetDecorator(types[x], true);
+				if (decorator != null)
+					decorator.RenderSceneGUI(modObjectsView.selectedParkitectObject);
 			}
 		}
 	}

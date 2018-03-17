@@ -44,25 +44,25 @@ public class Exporter
 		string targetDir = ""; 
 
 		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) 
-			targetDir = System.Environment.GetFolderPath (System.Environment.SpecialFolder.MyDocuments) + "/Parkitect/pnmods";	
+			targetDir = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments) + "/Parkitect/Mods";	
 		
-		if (!System.IO.Directory.Exists (targetDir)) 
-			targetDir = EditorUtility.OpenFolderPanel( "Select pnmods folder", "", "" );
+		if (!Directory.Exists (targetDir)) 
+			targetDir = EditorUtility.OpenFolderPanel( "Select Parkitect Mods folder", "", "" );
 
-		if (targetDir.Length != 0 && (targetDir.EndsWith ("pnmods/")||targetDir.EndsWith ("pnmods"))) {
+		if (targetDir.Length != 0 && (targetDir.EndsWith ("Mods/")||targetDir.EndsWith ("Mods"))) {
 
 			String modPath = targetDir + "/" + payload.modName;
-			System.IO.Directory.CreateDirectory (modPath);
-			System.IO.Directory.CreateDirectory (modPath + "/data");
+			Directory.CreateDirectory (modPath);
+			Directory.CreateDirectory (modPath + "/data");
 		
 
 			String sourcePath = Application.dataPath + "/Mods/" + payload.modName;
-			UnityEngine.Debug.Log (sourcePath);
+			Debug.Log (sourcePath);
 
 			foreach (string newPath in Directory.GetFiles(sourcePath, "*.*",SearchOption.AllDirectories))
-				File.Copy(newPath,modPath + "/data/" + Path.GetFileName(newPath), true);
+				File.Copy(newPath,modPath + Path.GetFileName(newPath), true);
 
-			if(!File.Exists(modPath+ "/.gitignore"))
+			/*if(!File.Exists(modPath+ "/.gitignore"))
 				File.WriteAllText (modPath+ "/.gitignore",PackagedFiles.GIT_IGNORE);
 			if(!File.Exists(modPath+ "/" + payload.modName + ".sln"))
 				File.WriteAllText (modPath+ "/" + payload.modName + ".sln",PackagedFiles.SLN.Replace("%1",payload.modName).Replace("%2",payload.modName));
@@ -70,9 +70,7 @@ public class Exporter
 				File.WriteAllText (modPath+ "/"  + payload.modName + ".csproj",PackagedFiles.CSPROJ.Replace("%1",payload.modName).Replace("%2",payload.modName));
 
 			File.WriteAllText (modPath+ "/Main.cs",PackagedFiles.MAIN.Replace("%1",payload.modName).Replace("%2",payload.description));
-			File.WriteAllText (modPath+ "/mod.json",PackagedFiles.MOD_JSON.Replace("%1",payload.modName).Replace("%2",payload.modName));
-
-			
+			File.WriteAllText (modPath+ "/mod.json",PackagedFiles.MOD_JSON.Replace("%1",payload.modName).Replace("%2",payload.modName));*/
 		}
 
 	}
