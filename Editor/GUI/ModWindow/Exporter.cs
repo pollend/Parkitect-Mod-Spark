@@ -7,7 +7,6 @@ using System.IO;
 
 public class Exporter
 {
-	public const string GIT_IGNORE ="";
 
 	public static void Export(ModPayload payload)
 	{
@@ -27,19 +26,41 @@ public class Exporter
 		AssetBundleBuild bundle = new AssetBundleBuild ();
 		bundle.assetBundleName = "assetbundle";
 
-
-
+		
 		List<string> paths = new List<string> ();
-		payload.GetAssetbundlePaths(paths);
+		//payload.GetAssetbundlePaths(paths);
+		//transform assets to pk-refs
+		if (AssetDatabase.IsValidFolder("Assets/Resources/Packs"))
+		{
+			AssetDatabase.DeleteAsset("Assets/Resources/Packs");
+		}
+		AssetDatabase.CreateFolder("Assets/Resources","Packs");
+		
+		for (int x = 0; x <	payload.ParkitectObjs.Count; x++)
+		{
+			ParkitectObj parkitectObj = payload.ParkitectObjs[x];
+			parkitectObj.UpdatePrefab();
+			String p = "Assets/Resources/Packs/" + parkitectObj.key + ".prefab";
+			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(parkitectObj.Prefab),p);
+			paths.Add(p);
+		}
+		
 		bundle.assetNames = paths.ToArray ();
 		AssetDatabase.CreateFolder ("Assets/Mods", payload.modName);
-		BuildPipeline.BuildAssetBundles ("Assets/Mods/" + payload.modName ,new AssetBundleBuild[]{bundle}, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-
+		
+#if UNITY_STANDALONE_OSX
+		BuildPipeline.BuildAssetBundles (path ,new AssetBundleBuild[]{bundle}, BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.StrictMode, BuildTarget.StandaloneOSX);
+#elif UNITY_STANDALONE_WIN
+		BuildPipeline.BuildAssetBundles (path ,new AssetBundleBuild[]{bundle}, BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.StrictMode, BuildTarget.StandaloneWindows);
+#elif UNITY_STANDALONE_LINUX
+		BuildPipeline.BuildAssetBundles (path ,new AssetBundleBuild[]{bundle},BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.StrictMode, BuildTarget.StandaloneLinux);
+#endif
+		
 		var mod = new XElement ("Mod", ModPayload.Instance.Serialize ());
 		mod.Save (path + "/mod.xml");
 
-		AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle");
-		AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle.manifest");
+		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle");
+		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle.manifest");
 
 		string targetDir = ""; 
 
@@ -51,10 +72,8 @@ public class Exporter
 
 		if (targetDir.Length != 0 && (targetDir.EndsWith ("Mods/")||targetDir.EndsWith ("Mods"))) {
 
-			String modPath = targetDir + "/" + payload.modName;
+			String modPath = targetDir + "/" + payload.modName + "/";
 			Directory.CreateDirectory (modPath);
-			Directory.CreateDirectory (modPath + "/data");
-		
 
 			String sourcePath = Application.dataPath + "/Mods/" + payload.modName;
 			Debug.Log (sourcePath);
