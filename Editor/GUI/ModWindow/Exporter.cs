@@ -57,7 +57,7 @@ public class Exporter
 #endif
 		
 		var mod = new XElement ("Mod", ModPayload.Instance.Serialize ());
-		mod.Save (path + "/mod.xml");
+		mod.Save (path + "/" + payload.modName + ".spark");
 
 		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle");
 		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle.manifest");
