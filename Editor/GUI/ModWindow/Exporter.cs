@@ -40,7 +40,7 @@ public class Exporter
 		{
 			ParkitectObj parkitectObj = payload.ParkitectObjs[x];
 			parkitectObj.UpdatePrefab();
-			String p = "Assets/Resources/Packs/" + parkitectObj.key + ".prefab";
+			String p = "Assets/Resources/Packs/" + parkitectObj.Key + ".prefab";
 			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(parkitectObj.Prefab),p);
 			paths.Add(p);
 		}

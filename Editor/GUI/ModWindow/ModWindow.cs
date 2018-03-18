@@ -6,7 +6,6 @@ using System.Linq;
 using System.IO;
 
 
-
 public class ModWindow : EditorWindow
 {
 	public static string version = "APLHA v3.0.0";
@@ -30,7 +29,6 @@ public class ModWindow : EditorWindow
 
 	public void repaintWindow()
 	{
-
 		Repaint();
 	}
 
@@ -108,7 +106,7 @@ public class ModWindow : EditorWindow
 			GUILayout.Label(modObjectsView.selectedParkitectObject.Prefab.name, "LODLevelNotifyText");
 			GUILayout.EndHorizontal();
 
-			GUILayout.Label(modObjectsView.selectedParkitectObject.key);
+			GUILayout.Label(modObjectsView.selectedParkitectObject.Key);
 			if (GUILayout.Button("Update Prefab"))
 			{
 				modObjectsView.selectedParkitectObject.UpdatePrefab();
@@ -125,7 +123,7 @@ public class ModWindow : EditorWindow
 			{
 				var decorator = modObjectsView.selectedParkitectObject.GetDecorator(types[x], true);
 				if (decorator != null)
-					decorator.RenderInspectorGUI(modObjectsView.selectedParkitectObject);
+					decorator.RenderInspectorGui(modObjectsView.selectedParkitectObject);
 			}
 		}
 
@@ -141,8 +139,6 @@ public class ModWindow : EditorWindow
 
 	void OnFocus()
 	{
-
-
 		// Remove delegate listener if it has previously
 		// been assigned.
 		SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
@@ -169,7 +165,7 @@ public class ModWindow : EditorWindow
 			{
 				var decorator = modObjectsView.selectedParkitectObject.GetDecorator(types[x], true);
 				if (decorator != null)
-					decorator.RenderSceneGUI(modObjectsView.selectedParkitectObject);
+					decorator.RenderSceneGui(modObjectsView.selectedParkitectObject);
 			}
 		}
 	}

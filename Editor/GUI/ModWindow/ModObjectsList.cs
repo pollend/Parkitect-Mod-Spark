@@ -1,13 +1,11 @@
-﻿using System;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-
 
 public class ModObjectsList
 {
-	private Vector2 scrollPos2 = new Vector2();
+	private Vector2 scrollPos2;
 	public ParkitectObj selectedParkitectObject 
 	{ 
 		get { return ModPayload.Instance.selectedParkitectObject;}
@@ -16,36 +14,32 @@ public class ModObjectsList
 		}
 	}
 
-	public ModObjectsList ()
-	{
-	}
-
 	public void SwitchParkitectObject(ParkitectObj orignal, ParkitectObj replace)
 	{
 		if (ModPayload.Instance.ParkitectObjs.Contains (orignal)) {
 			ModPayload.Instance.ParkitectObjs.Remove (orignal);
 
-			UnityEngine.Object.DestroyImmediate (orignal, true);
+			Object.DestroyImmediate (orignal, true);
 			AssetDatabase.SaveAssets ();
 			if(!SceneManager.GetActiveScene().isDirty)
 				EditorSceneManager.MarkSceneDirty (SceneManager.GetActiveScene());
 		
 		}
-		this.AddParkitectObject (replace);
+		AddParkitectObject (replace);
 
-		if (orignal == this.selectedParkitectObject) {
-			this.selectedParkitectObject = replace;
+		if (orignal == selectedParkitectObject) {
+			selectedParkitectObject = replace;
 		}
 	}
 
 	public bool RemoveParkitectObject(ParkitectObj obj)
 	{
-		if (obj == this.selectedParkitectObject)
-			this.selectedParkitectObject = null;
+		if (obj == selectedParkitectObject)
+			selectedParkitectObject = null;
 
 		obj.CleanUp ();
         ModPayload.Instance.ParkitectObjs.Remove (obj);
-		UnityEngine.Object.DestroyImmediate (obj, true);
+		Object.DestroyImmediate (obj, true);
         obj.CleanUp ();
 		AssetDatabase.SaveAssets ();
 		if(!SceneManager.GetActiveScene().isDirty)
@@ -73,11 +67,11 @@ public class ModObjectsList
 
 	public void ClearParkitectObjects()
 	{
-		this.selectedParkitectObject = null;
+		selectedParkitectObject = null;
 
         for (int x = 0; x < ModPayload.Instance.ParkitectObjs.Count; x++) {
             ModPayload.Instance.ParkitectObjs [x].CleanUp ();
-            UnityEngine.Object.DestroyImmediate (ModPayload.Instance.ParkitectObjs [x], true);
+            Object.DestroyImmediate (ModPayload.Instance.ParkitectObjs [x], true);
         }
 
 		AssetDatabase.SaveAssets ();
@@ -90,7 +84,7 @@ public class ModObjectsList
 
 
 
-	public void Render(UnityEngine.Object[] selectedObjects)
+	public void Render(Object[] selectedObjects)
 	{
 		Event e = Event.current;
 
@@ -100,7 +94,7 @@ public class ModObjectsList
 		scrollPos2 = EditorGUILayout.BeginScrollView(scrollPos2, "GroupBox", GUILayout.Height(140));
 		foreach (ParkitectObj PO in ModPayload.Instance.ParkitectObjs)
 		{
-			if (PO == this.selectedParkitectObject)
+			if (PO == selectedParkitectObject)
 			{
 				GUI.color = Color.red;
 			}
@@ -110,7 +104,7 @@ public class ModObjectsList
 				{
 					if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this missing GameObject item?  ", "Ok", "Cancel"))
 					{
-						this.RemoveParkitectObject (PO);
+						RemoveParkitectObject (PO);
 					}
 
 					GUI.FocusControl("");
@@ -128,7 +122,7 @@ public class ModObjectsList
 						if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this item? Name: " + PO.Prefab.name, "Ok", "Cancel"))
 						{
 							PO.CleanUp ();
-							this.RemoveParkitectObject (PO);
+							RemoveParkitectObject (PO);
 							//modManager.ParkitectObjects.Remove(PO);
 							//modManager.asset = null;
 						}
@@ -146,14 +140,14 @@ public class ModObjectsList
 					//modWindow.enableEditing = false;
 					//modWindow.BBW.enableEditing = false;
 
-					if (this.selectedParkitectObject == PO)
+					if (selectedParkitectObject == PO)
 					{
-						this.selectedParkitectObject = null;
+						selectedParkitectObject = null;
 
 					}
 					else
 					{
-						this.selectedParkitectObject = PO;
+						selectedParkitectObject = PO;
 
 					}
 
@@ -227,15 +221,19 @@ public class ModObjectsList
 					foreach (ParkitectObj po in ModPayload.Instance.ParkitectObjs)
 					{
 						if (po.Prefab == gObj) {
-							UnityEngine.Debug.LogWarning ("Object already in list");
+							Debug.LogWarning ("Object already in list");
 							EditorGUIUtility.PingObject (po.Prefab);
 							return;
-						} else if (!GameObject.Find (po.Prefab.name)) {
-							UnityEngine.Debug.LogWarning ("Object not in scene");
+						}
+
+						if (!GameObject.Find (po.Prefab.name)) {
+							Debug.LogWarning ("Object not in scene");
 							EditorGUIUtility.PingObject (po.Prefab);
 							return;
-						} else if (gObj.name == po.Prefab.name) {
-							UnityEngine.Debug.LogWarning ("Object found with the same name");
+						}
+
+						if (gObj.name == po.Prefab.name) {
+							Debug.LogWarning ("Object found with the same name");
 							EditorGUIUtility.PingObject (po.Prefab);
 							return;
 						}
@@ -245,7 +243,7 @@ public class ModObjectsList
 					DecoParkitectObject emptyParkitectObject = ScriptableObject.CreateInstance<DecoParkitectObject> ();
 					emptyParkitectObject.SetGameObject(gObj);
 					AddParkitectObject (emptyParkitectObject);
-					this.selectedParkitectObject = emptyParkitectObject;
+					selectedParkitectObject = emptyParkitectObject;
 	
 				}
 
@@ -257,16 +255,16 @@ public class ModObjectsList
 		{
 			if (EditorUtility.DisplayDialog("Are you sure to delete this list?", "Are you sure to delete this whole list ", "Ok", "Cancel"))
 			{
-				this.ClearParkitectObjects ();
+				ClearParkitectObjects ();
 			}
 		}
 		if (selectedParkitectObject != null && selectedParkitectObject.Prefab)
 		{
 			if (GUILayout.Button("Delete this object"))
 			{
-				if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this item? Name: " +  this.selectedParkitectObject.name, "Ok", "Cancel"))
+				if (EditorUtility.DisplayDialog("Are you sure to delete this item?", "Are you sure to delete this item? Name: " +  selectedParkitectObject.name, "Ok", "Cancel"))
 				{
-					RemoveParkitectObject (this.selectedParkitectObject);
+					RemoveParkitectObject (selectedParkitectObject);
 				}
 			}
 		}
