@@ -110,12 +110,10 @@ public class ModObjectsList
 					GUI.FocusControl("");
 					//modWindow.selectedWaypoint = null;
 				}
-
 			}
 			else
 			{
-
-				if (GUILayout.Button(PO.Prefab.name, "minibutton"))
+				if (GUILayout.Button(PO.Prefab.name + " (" + PO.GetObjectTag() + ")", "minibutton"))
 				{
 					if (e.button == 1)
 					{

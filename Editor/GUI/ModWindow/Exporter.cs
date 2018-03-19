@@ -43,6 +43,8 @@ public class Exporter
 			String p = "Assets/Resources/Packs/" + parkitectObj.Key + ".prefab";
 			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(parkitectObj.Prefab),p);
 			paths.Add(p);
+			
+			paths.AddRange(parkitectObj.getAssetPaths());
 		}
 		
 		bundle.assetNames = paths.ToArray ();
