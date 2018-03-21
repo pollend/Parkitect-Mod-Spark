@@ -10,7 +10,7 @@ public class Exporter
 
 	public static void Export(ModPayload payload)
 	{
-		string path = "Assets/Mods/" + payload.modName;
+		string path = "Assets/Mods/" + payload.ModName;
 		if (AssetDatabase.IsValidFolder(path))
 		{
 			AssetDatabase.DeleteAsset(path);
@@ -48,7 +48,7 @@ public class Exporter
 		}
 		
 		bundle.assetNames = paths.ToArray ();
-		AssetDatabase.CreateFolder ("Assets/Mods", payload.modName);
+		AssetDatabase.CreateFolder ("Assets/Mods", payload.ModName);
 		
 #if UNITY_STANDALONE_OSX
 		BuildPipeline.BuildAssetBundles (path ,new AssetBundleBuild[]{bundle}, BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.StrictMode, BuildTarget.StandaloneOSX);
@@ -58,8 +58,7 @@ public class Exporter
 		BuildPipeline.BuildAssetBundles (path ,new AssetBundleBuild[]{bundle},BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.StrictMode, BuildTarget.StandaloneLinux);
 #endif
 		
-		var mod = new XElement ("Mod", ModPayload.Instance.Serialize ());
-		mod.Save (path + "/" + payload.modName + ".spark");
+		File.WriteAllText(path + "/" + payload.ModName + ".spark", MiniJSON.Json.Serialize(ModPayload.Instance.Serialize ()));
 
 		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle");
 		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle.manifest");
@@ -74,10 +73,10 @@ public class Exporter
 
 		if (targetDir.Length != 0 && (targetDir.EndsWith ("Mods/")||targetDir.EndsWith ("Mods"))) {
 
-			String modPath = targetDir + "/" + payload.modName + "/";
+			String modPath = targetDir + "/" + payload.ModName + "/";
 			Directory.CreateDirectory (modPath);
 
-			String sourcePath = Application.dataPath + "/Mods/" + payload.modName;
+			String sourcePath = Application.dataPath + "/Mods/" + payload.ModName;
 			Debug.Log (sourcePath);
 
 			foreach (string newPath in Directory.GetFiles(sourcePath, "*.*",SearchOption.AllDirectories))

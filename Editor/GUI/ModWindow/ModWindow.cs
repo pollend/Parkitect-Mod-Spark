@@ -86,7 +86,7 @@ public class ModWindow : EditorWindow
 		GUILayout.Label(logo, centeredStyle, GUILayout.MaxWidth(Screen.width), GUILayout.ExpandHeight(false));
 		//Show Mod name
 		GUILayout.BeginHorizontal("flow background");
-		GUILayout.Label(ModPayload.Instance.modName, "LODLevelNotifyText");
+		GUILayout.Label(ModPayload.Instance.ModName, "LODLevelNotifyText");
 		GUILayout.EndHorizontal();
 
 		Event e = Event.current;

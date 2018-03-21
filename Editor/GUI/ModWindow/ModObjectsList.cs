@@ -8,9 +8,9 @@ public class ModObjectsList
 	private Vector2 scrollPos2;
 	public ParkitectObj selectedParkitectObject 
 	{ 
-		get { return ModPayload.Instance.selectedParkitectObject;}
+		get { return ModPayload.Instance.SelectedParkitectObject;}
 		private set { 
-			ModPayload.Instance.selectedParkitectObject = value;
+			ModPayload.Instance.SelectedParkitectObject = value;
 		}
 	}
 

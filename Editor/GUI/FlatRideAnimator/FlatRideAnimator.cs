@@ -2,7 +2,6 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 public class FlatRideAnimator : EditorWindow
 {
@@ -37,15 +36,15 @@ public class FlatRideAnimator : EditorWindow
 
 	private AnimatorDecorator GetActiveAnimator()
 	{
-		if (ModPayload.Instance.selectedParkitectObject == null)
+		if (ModPayload.Instance.SelectedParkitectObject == null)
 			return null;
-		return (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		return (AnimatorDecorator)ModPayload.Instance.SelectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
 		
 	}
 
 	private Transform getSceneTransform()
 	{
-		var gameObjectref =  ModPayload.Instance.selectedParkitectObject.getGameObjectRef (false);
+		var gameObjectref =  ModPayload.Instance.SelectedParkitectObject.getGameObjectRef (false);
 		if (gameObjectref == null)
 			return null;
 
@@ -470,9 +469,9 @@ public class FlatRideAnimator : EditorWindow
     }
 	private void CallbackFunction()
     {
-		if (ModPayload.Instance.selectedParkitectObject == null)
+		if (ModPayload.Instance.SelectedParkitectObject == null)
 			return;
-		AnimatorDecorator animator = (AnimatorDecorator)ModPayload.Instance.selectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
+		AnimatorDecorator animator = (AnimatorDecorator)ModPayload.Instance.SelectedParkitectObject.GetDecorator (typeof(AnimatorDecorator), false);
 		if (animator == null)
 			return;
 
