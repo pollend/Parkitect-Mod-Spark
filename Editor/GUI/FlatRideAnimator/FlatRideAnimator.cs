@@ -172,7 +172,7 @@ public class FlatRideAnimator : EditorWindow
                 {
 
                     GUI.FocusControl("");
-                    m.showSettings = !m.showSettings;
+                    m.ShowSettings = !m.ShowSettings;
                     if (e.button == 1)
                     {
 						animator.RemoveMotor (m);//.Remove(m);
@@ -185,7 +185,7 @@ public class FlatRideAnimator : EditorWindow
 
                 GUI.color = Color.white;
 
-                if (m.showSettings)
+                if (m.ShowSettings)
 					m.InspectorGUI(sceneTransform);
                 EditorGUILayout.EndVertical();
             }
@@ -217,7 +217,7 @@ public class FlatRideAnimator : EditorWindow
             {
 				for (int i = 0; i < animator.Phases.Count; i++) // Loop with for.
                 {
-					if (animator.Phases[i] == animator.currentPhase)
+					if (animator.Phases[i] == animator.CurrentPhase)
                     {
                         GUI.color = Color.Lerp(Color.green, new Color(1, 1, 1), .7f);
                     }
@@ -249,11 +249,11 @@ public class FlatRideAnimator : EditorWindow
                         EditorGUILayout.BeginVertical("ShurikenEffectBg");
                         GUI.color = Color.Lerp(new Color(RAE.ColorIdentifier.r, RAE.ColorIdentifier.g, RAE.ColorIdentifier.b), new Color(1, 1, 1), .7f);
                         string Done = "";
-						if(animator.animating && RAE.done)
+						if(animator.Animating && RAE.Done)
                             Done = " ✓";
                         if (GUILayout.Button(RAE.EventName + Done, "ShurikenModuleTitle"))
                         { GUI.FocusControl("");
-                            RAE.showSettings = !RAE.showSettings;
+                            RAE.ShowSettings = !RAE.ShowSettings;
                             if (e.button == 1)
                             {
 								animator.Phases[i].DeleteEvent(RAE);
@@ -262,7 +262,7 @@ public class FlatRideAnimator : EditorWindow
 
                         }
                         GUI.color = Color.white;
-                        if (RAE.showSettings)
+                        if (RAE.ShowSettings)
 							RAE.RenderInspectorGUI(animator.Motors.ToArray());
                         EditorGUILayout.EndVertical();
                     }
@@ -359,12 +359,12 @@ public class FlatRideAnimator : EditorWindow
         
         if (isPlaying)
         {
-			if(!animator.animating)
+			if(!animator.Animating)
             {
 				ResetMotors(animator,root);
-				animator.currentPhase = null;
+				animator.CurrentPhase = null;
             }
-			isPlaying = animator.animating;   
+			isPlaying = animator.Animating;   
         }
         if (GUILayout.Button(button, EditorStyles.toolbarButton))
         {
@@ -373,14 +373,14 @@ public class FlatRideAnimator : EditorWindow
             if (isPlaying)
             {
 				animator.Animate(root);
-				isPlaying = animator.animating;
+				isPlaying = animator.Animating;
 
             }
             else
             {
 				ResetMotors(animator,root);
 
-				animator.currentPhase = null;
+				animator.CurrentPhase = null;
             }
         }
         GUI.color = Color.white;
@@ -410,15 +410,15 @@ public class FlatRideAnimator : EditorWindow
 
 				if (R)
                 {
-					if (R.rotationAxis != Vector3.zero)
+					if (R.RotationAxis != Vector3.zero)
 					{
-						Transform transform =  R.axis.FindSceneRefrence (sceneTransform);
+						Transform transform =  R.Axis.FindSceneRefrence (sceneTransform);
 						if (transform != null ) {
 							
 							Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 1);
-							Handles.CircleCap(0,transform.position, transform.rotation * Quaternion.LookRotation(R.rotationAxis), .3f);
+							Handles.CircleCap(0,transform.position, transform.rotation * Quaternion.LookRotation(R.RotationAxis), .3f);
 							Handles.color = new Color(R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 0.1f);
-							Handles.DrawSolidDisc(transform.position, transform.rotation * R.rotationAxis, .3f);
+							Handles.DrawSolidDisc(transform.position, transform.rotation * R.RotationAxis, .3f);
 						}
   
                     }
@@ -450,14 +450,14 @@ public class FlatRideAnimator : EditorWindow
             {
 				if (R != null)
                 {
-					Transform transform =  R.axis.FindSceneRefrence (sceneTransform);
+					Transform transform =  R.Axis.FindSceneRefrence (sceneTransform);
 					if (transform != null) {
 						
 						Handles.color = new Color (R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 1);
-						Handles.DrawLine (transform.position, transform.TransformPoint (R.toPosition) - transform.localPosition);
+						Handles.DrawLine (transform.position, transform.TransformPoint (R.ToPosition) - transform.localPosition);
 						Handles.color = new Color (R.ColorIdentifier.r, R.ColorIdentifier.g, R.ColorIdentifier.b, 0.5f);
 						Handles.SphereCap (0, transform.position, transform.rotation, .1f);
-						Handles.SphereCap (0, transform.TransformPoint (R.toPosition) - transform.localPosition, transform.rotation, .1f);
+						Handles.SphereCap (0, transform.TransformPoint (R.ToPosition) - transform.localPosition, transform.rotation, .1f);
 					}
                 }
             }
