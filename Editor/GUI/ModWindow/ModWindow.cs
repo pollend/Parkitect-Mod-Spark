@@ -118,13 +118,7 @@ public class ModWindow : EditorWindow
 				modObjectsView.selectedParkitectObject.UpdatePrefab();
 			}
 
-			Type[] types = modObjectsView.selectedParkitectObject.SupportedDecorators();
-			for (int x = 0; x < types.Length; x++)
-			{
-				var decorator = modObjectsView.selectedParkitectObject.GetDecorator(types[x], true);
-				if (decorator != null)
-					decorator.RenderInspectorGui(modObjectsView.selectedParkitectObject);
-			}
+			modObjectsView.selectedParkitectObject.RenderInspectorGui();
 		}
 
 		EditorUtility.SetDirty(ModPayload.Instance);
@@ -160,13 +154,7 @@ public class ModWindow : EditorWindow
 
 		if (modObjectsView.selectedParkitectObject != null && modObjectsView.selectedParkitectObject.Prefab != null)
 		{
-			Type[] types = modObjectsView.selectedParkitectObject.SupportedDecorators();
-			for (int x = 0; x < types.Length; x++)
-			{
-				var decorator = modObjectsView.selectedParkitectObject.GetDecorator(types[x], true);
-				if (decorator != null)
-					decorator.RenderSceneGui(modObjectsView.selectedParkitectObject);
-			}
+			modObjectsView.selectedParkitectObject.RenderSceneGui();
 		}
 	}
 
