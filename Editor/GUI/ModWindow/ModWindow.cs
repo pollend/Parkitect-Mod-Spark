@@ -114,7 +114,7 @@ public class ModWindow : EditorWindow
 
 			if (GUILayout.Button("Create Instance In Scene"))
 			{
-				modObjectsView.selectedParkitectObject.getGameObjectRef(true);
+				modObjectsView.selectedParkitectObject.GetGameObjectRef(true);
 				modObjectsView.selectedParkitectObject.UpdatePrefab();
 			}
 

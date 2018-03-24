@@ -30,28 +30,28 @@ public abstract class ScriptableSingleton<T> : ScriptableObject where T : Script
 
 	public static T Instance{
 		get{
-			if(cachedInstance == null){
-				cachedInstance = Resources.Load(ResourcePath) as T;
+			if(_cachedInstance == null){
+				_cachedInstance = Resources.Load(ResourcePath) as T;
 			}
 			#if UNITY_EDITOR
-			if(cachedInstance == null){
-				cachedInstance = CreateAndSave();
+			if(_cachedInstance == null){
+				_cachedInstance = CreateAndSave();
 			}
 			#endif
-			if(cachedInstance == null){
+			if(_cachedInstance == null){
 				Debug.LogWarning("No instance of " + FileName + " found, using default values");
-				cachedInstance = ScriptableObject.CreateInstance<T>();
-				cachedInstance.OnCreate();
+				_cachedInstance = CreateInstance<T>();
+				_cachedInstance.OnCreate();
 			}
 
-			return cachedInstance;
+			return _cachedInstance;
 		}
 	}	
-	private static T cachedInstance;
+	private static T _cachedInstance;
 
 	#if UNITY_EDITOR
 	protected static T CreateAndSave(){
-		T instance = ScriptableObject.CreateInstance<T>();
+		T instance = CreateInstance<T>();
 		instance.OnCreate();
 		//Saving during Awake() will crash Unity, delay saving until next editor frame
 		if(EditorApplication.isPlayingOrWillChangePlaymode){

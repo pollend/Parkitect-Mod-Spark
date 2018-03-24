@@ -149,7 +149,7 @@ public class ModObjectsList
 
 					}
 
-					GameObject instance = PO.getGameObjectRef (true);
+					GameObject instance = PO.GetGameObjectRef (true);
 
 					EditorGUIUtility.PingObject(instance);
 					GameObject[] newSelection = new GameObject[1];

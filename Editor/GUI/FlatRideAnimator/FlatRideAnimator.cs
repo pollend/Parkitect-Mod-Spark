@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Rendering;
 
 public class FlatRideAnimator : EditorWindow
 {
@@ -52,7 +53,7 @@ public class FlatRideAnimator : EditorWindow
 
 	private Transform getSceneTransform()
 	{
-		var gameObjectref = ModPayload.Instance.SelectedParkitectObject.getGameObjectRef(false);
+		var gameObjectref = ModPayload.Instance.SelectedParkitectObject.GetGameObjectRef(false);
 		if (gameObjectref == null)
 			return null;
 
@@ -202,29 +203,29 @@ public class FlatRideAnimator : EditorWindow
 						menu.ShowAsContext();
 						e.Use();
 					}
-					foreach (RideAnimationEvent RAE in animator.Phases[i].Events)
+					foreach (RideAnimationEvent rae in animator.Phases[i].Events)
 					{
 
 						EditorGUILayout.BeginVertical("ShurikenEffectBg");
-						GUI.color = Color.Lerp(new Color(RAE.ColorIdentifier.r, RAE.ColorIdentifier.g, RAE.ColorIdentifier.b),
+						GUI.color = Color.Lerp(new Color(rae.ColorIdentifier.r, rae.ColorIdentifier.g, rae.ColorIdentifier.b),
 							new Color(1, 1, 1), .7f);
 						string Done = "";
-						if (animator.Animating && RAE.Done)
+						if (animator.Animating && rae.Done)
 							Done = " ✓";
-						if (GUILayout.Button(RAE.EventName + Done, "ShurikenModuleTitle"))
+						if (GUILayout.Button(rae.EventName + Done, "ShurikenModuleTitle"))
 						{
 							GUI.FocusControl("");
-							RAE.ShowSettings = !RAE.ShowSettings;
+							rae.ShowSettings = !rae.ShowSettings;
 							if (e.button == 1)
 							{
-								animator.Phases[i].DeleteEvent(RAE);
+								animator.Phases[i].DeleteEvent(rae);
 								return;
 							}
 
 						}
 						GUI.color = Color.white;
-						if (RAE.ShowSettings)
-							RAE.RenderInspectorGUI(animator.Motors.ToArray());
+						if (rae.ShowSettings)
+							rae.RenderInspectorGUI(animator.Motors.ToArray());
 						EditorGUILayout.EndVertical();
 					}
 					GUILayout.FlexibleSpace();
@@ -366,7 +367,7 @@ public class FlatRideAnimator : EditorWindow
 		Transform sceneTransform = getSceneTransform();
 		if (sceneTransform == null)
 			return;
-
+		Handles.zTest = CompareFunction.Always;
 
 		// if (ModManager && ModManager.asset != null && ModManager.asset.type == ParkitectObject.ObjType.FlatRide)
 		{
