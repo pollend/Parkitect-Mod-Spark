@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 using System.IO;
+using MiniJSON;
 
 public class Exporter
 {
@@ -81,7 +82,15 @@ public class Exporter
 
 			foreach (string newPath in Directory.GetFiles(sourcePath, "*.*",SearchOption.AllDirectories))
 				File.Copy(newPath,modPath + Path.GetFileName(newPath), true);
-
+			File.WriteAllText (modPath+ "/"+ModPayload.Instance.ModName + ".assetProject",Json.Serialize(new Dictionary<string,object>()
+			{
+				{"Assets",new List<object>()},
+				{"Name",ModPayload.Instance.ModName},
+				{"Description",ModPayload.Instance.Description},
+				{"ArchiveAssets",false}
+				
+			}));
+			
 			/*if(!File.Exists(modPath+ "/.gitignore"))
 				File.WriteAllText (modPath+ "/.gitignore",PackagedFiles.GIT_IGNORE);
 			if(!File.Exists(modPath+ "/" + payload.modName + ".sln"))
