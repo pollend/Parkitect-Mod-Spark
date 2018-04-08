@@ -129,10 +129,6 @@ public class ModObjectsList
 
 					GUI.FocusControl("");
 
-					if (PO is FlatRideParkitectObject && EditorWindow.GetWindow(typeof(FlatRideAnimator)))
-					{
-						EditorWindow.GetWindow(typeof(FlatRideAnimator)).Repaint();
-					}
 
 					//Disable editing
 					//modWindow.enableEditing = false;
