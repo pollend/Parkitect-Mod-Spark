@@ -61,9 +61,7 @@ public class Exporter
 		
 		File.WriteAllText(path + "/" + payload.ModName + ".spark", MiniJSON.Json.Serialize(ModPayload.Instance.Serialize ()));
 
-		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle");
-		//AssetDatabase.DeleteAsset ("Assets/Mods/" + payload.modName + "/assetbundle.manifest");
-
+		
 		string targetDir = ""; 
 
 		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) 
@@ -82,24 +80,9 @@ public class Exporter
 
 			foreach (string newPath in Directory.GetFiles(sourcePath, "*.*",SearchOption.AllDirectories))
 				File.Copy(newPath,modPath + Path.GetFileName(newPath), true);
-			File.WriteAllText (modPath+ "/"+ModPayload.Instance.ModName + ".assetProject",Json.Serialize(new Dictionary<string,object>()
-			{
-				{"Assets",new List<object>()},
-				{"Name",ModPayload.Instance.ModName},
-				{"Description",ModPayload.Instance.Description},
-				{"ArchiveAssets",false}
-				
-			}));
 			
-			/*if(!File.Exists(modPath+ "/.gitignore"))
-				File.WriteAllText (modPath+ "/.gitignore",PackagedFiles.GIT_IGNORE);
-			if(!File.Exists(modPath+ "/" + payload.modName + ".sln"))
-				File.WriteAllText (modPath+ "/" + payload.modName + ".sln",PackagedFiles.SLN.Replace("%1",payload.modName).Replace("%2",payload.modName));
-			if(!File.Exists(modPath+ "/"  + payload.modName + ".csproj"))
-				File.WriteAllText (modPath+ "/"  + payload.modName + ".csproj",PackagedFiles.CSPROJ.Replace("%1",payload.modName).Replace("%2",payload.modName));
-
-			File.WriteAllText (modPath+ "/Main.cs",PackagedFiles.MAIN.Replace("%1",payload.modName).Replace("%2",payload.description));
-			File.WriteAllText (modPath+ "/mod.json",PackagedFiles.MOD_JSON.Replace("%1",payload.modName).Replace("%2",payload.modName));*/
+			File.Copy(Application.dataPath+"/Parkitect-Mod-Spark/ParkitectModMiniBoot.dll",modPath +"/ParkitectModMiniBoot.dll", true);
+			
 		}
 
 	}
